@@ -1,0 +1,123 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: You are an expert in Laravel v12, Inertia, Vue.js, and modern full-stack web development technologies.
+---
+
+# Key Principles
+- Write concise, technical responses with accurate examples in PHP and Vue.js.
+- Follow Laravel v12 and Vue.js 3 best practices and conventions.
+- Use object-oriented programming with a focus on SOLID principles and design patterns.
+- Favor iteration and modularization over duplication.
+- Use descriptive and meaningful names for variables, methods, classes, and components.
+- Adhere to Laravel's directory structure conventions (e.g., app/Http/Controllers, resources/js).
+- Prioritize dependency injection and the service container for decoupling.
+
+# Laravel (v12)
+- Leverage PHP 8.2+ features (readonly properties, enums, match expressions, named arguments).
+- Apply strict typing in all PHP files.
+- Follow PSR-12 coding standards.
+- Use Laravel's built-in helpers (Str::, Arr::, etc.).
+- No dependency changes without approval.
+- File structure: 
+    - Stick to existing structure.
+    - Adhere to MVC under app/, resources/, routes/, database/.
+- Error handling & logging:
+    - Use the global exception handler and Log facade.
+    - Create custom exceptions for domain errors; wrap predictable failures in try-catch.
+    - Return back custom written messages (error or success) in the try-catch.
+    ```php
+    public function store(StoreModuleRequest $request): SymfonyResponse
+    {
+        try {
+            $attributes = [
+                'company_id' => $request->user()->company_id,
+                ...$request->safe()->only(['title', 'description']),
+            ];
+
+            $this->authorize('store', [Module::class, $attributes]);
+
+            $module = Module::create($attributes);
+
+            return Inertia::render('modules/Create', [
+                'module' => $module,
+            ])->with('success', 'module.actions.create')
+                ->toResponse($request)
+                ->setStatusCode(SymfonyResponse::HTTP_CREATED);
+        } catch (AuthorizationException $e) {
+            return Inertia::render('modules/Create')
+                ->with('errors', 'errors.not-allowed')
+                ->toResponse($request)
+                ->setStatusCode(SymfonyResponse::HTTP_FORBIDDEN);
+        } catch (Exception $e) {
+            return Inertia::render('modules/Create')
+                ->with('errors', 'errors.internal-server-error')
+                ->toResponse($request)
+                ->setStatusCode(SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    ```
+- Validation & middleware:
+    - Encapsulate validation in Form Request classes.
+    - Apply middleware for auth, throttling, and input sanitization.
+- Data layer:
+    - Model with Eloquent ORM; define casts, accessors, mutators, and scopes.
+    - Use query builder for complex queries and local/global scopes for reuse.
+    - Avoid DB::; use Model::query() only.
+    - Use the Actions pattern and naming verbs.
+    ```php
+    public function store(CreateTodoRequest $request, CreateTodoAction $action)
+    {
+        $user = $request->user();
+        $action->handle($user, $request->validated());
+    }
+    ```
+- Migrations & testing data:
+    - Remove the word table from migration names unless specified.
+    - Manage schema with migrations, seeders, and model factories.
+    - Leverage in-memory testing databases for fast PHPUnit runs.
+    - Omit down() in new migrations; rely on migrate:rollback.
+- Models:
+    - Avoid $fillable; prefer guarded or explicit attribute casting.
+- Controllers:
+    - Add comments before controller functions include @brief, @params and @return
+    ```php
+    /**
+     * @brief   Action to create a new module.
+     * 
+     * @param   App\Http\Requests\Module\StoreModuleRequest
+     *          Incoming request instance from the frontend form.
+     * 
+     * @return  Symfony\Component\HttpFoundation\Response
+     *          Success or fail request to be sent to Inertia component.
+     */
+    public function store(StoreModuleRequest $request): SymfonyResponse {}
+    ```
+
+# Vue.js & Inertia
+- Use Vue 3 with the Composition API and ``<script setup>`` syntax.
+- Integrate Inertia.js for server-driven SPA interactions.
+- Organize components under resources/js/components.
+- State management with Pinia, split into feature-based stores.
+- Form validation via Vuelidate (Composition API mode) or similar.
+- UI styling with TailwindCSS utility classes and reusable Rekaui components.
+
+# Styling & UI
+- Use Tailwind CSS.
+- Keep UI minimal; prioritize utility classes and component reusability.
+- UI should be modern
+
+# Dependencies (No dependency changes without approval)
+- Laravel v12 (latest stable)
+- PHP 8.4+ & Composer
+- Inertia.js & @inertiajs/inertia-vue3
+- Vue 3 & Pinia
+- TailwindCSS & RekaUI
+- Vite for assets
+- PHPUnit (with Pest PHP) for testing
+
+# Task Completion Requirements
+- Follow all rules before marking tasks complete.

@@ -1,0 +1,97 @@
+{
+    "general": {
+        "copyright": "© [currentYear] EduCli. All rights reserved.",
+        "actions": "Actions",
+        "view": "View",
+        "status": "Status",
+        "success": "Success",
+        "not-available": "N/A"
+    },
+    "actions": {
+        "title": "Actions",
+        "update": "Update",
+        "save": "Save",
+        "delete": "Move to Trash",
+        "restore": "Restore Item",
+        "preview": "Preview",
+        "draft": "Send to Draft",
+        "publish": "Publish",
+        "update-publish": "Update & Publish"
+    },
+    "errors": {
+        "company-not-found": "Company has not been found or is not created yet",
+        "not-allowed": "You are not allowed to do this action!",
+        "internal-server-error": "A technical error has occured. Please contact support.",
+        "validation": "The information you have provided is not correct",
+        "pagination": {
+            "not-available": {
+                "title": "Page does not exist",
+                "description": "You have been redirected to page 1."
+            }
+        }
+    },
+    "input": {
+        "placeholders": {
+            "email": "john.doe@example.com",
+            "password": "••••••••",
+            "full-name": "John Doe",
+            "company": "Acme Ltd."
+        }
+    },
+    "label": {
+        "email": "Email",
+        "password": "Password",
+        "confirm-password": "Confirm Password",
+        "full-name": "Full Name",
+        "company": "Company Name"
+    },
+    "modules": {
+        "title": "Modules",
+        "description": "Description",
+        "create-title": "Create Module",
+        "generate-title": "Generate Modules",
+        "view-module": "View Module",
+        "no-modules": "No modules yet",
+        "create-module": "Create your first module to get started",
+        "not-found-modules": "No modules have been found",
+        "actions": {
+            "update": "Update Module",
+            "save": "Save Module"
+        },
+        "placeholders": {
+            "module-title": "Enter module title",
+            "module-description": "Enter module description",
+            "search": "Search modules..."
+        }
+    },
+    "courses": {
+        "title": "Courses",
+        "create-title": "Create Course",
+        "view-course": "View Course",
+        "no-courses": "No courses yet",
+        "create-course": "Create your first course to get started",
+        "not-found-courses": "No courses have been found",
+        "actions": {
+            "update": "Update Course",
+            "save": "Save Course"
+        },
+        "placeholders": {
+            "course-title": "Enter course title",
+            "search": "Search courses..."
+        }
+    },
+    "login": {
+        "sign-in": "Sign in",
+        "have-account": "Don't have an account?",
+        "actions": {
+            "create": "Create an Account"
+        }
+    },
+    "register": {
+        "have-account": "Already have an account?",
+        "sign-in": "Sign in",
+        "actions": {
+            "create": "Create Account"
+        }
+    }
+}

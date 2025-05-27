@@ -1,0 +1,7 @@
+### 27/05/2025
+
+#### Issue
+Originally, I was working with Laravel Herd which allowed the project to be accessible through a local test domain. However since I needed to integrate Google and Youtube API, I could not use the local test domain to create the full flow of the oAuth from Google since .test domains are not considered top-level domains. Everything was taken care of by Laravel Herd in the background including PHP, Windows environment variables, paths etc..
+
+### Solution
+I migrated out of Laravel Herd and now using a plain Laravel installation with Vite. I had to do some minor changes in the Vite configuration to ensure that hot-reloading can still work properly. Laravel Herd used to run the `php artisan serve` command in the background whereas as a developer, I just needed to run the Vite command to watch the frontend and compile on the fly. Now, we need to run 2 commands at once: `php -S 0.0.0.0:80 -t public` to run the PHP server at port 80 and `npm run dev` to compile the frontend on port 5173. I have added some setup in `vite.config.ts` to ensure that the Vite directories can be served from port 5173 to port 80 without any problems. I also changed the hosts file in my Windows directory to include `127.0.0.1 curatio.com`. I am now successfully accessing my local project on `curatio.com` which will be acting as my top-level domain in the Google API.
