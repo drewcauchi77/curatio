@@ -8,10 +8,11 @@
 -   Storage for uploads
 -   Cronjob to feed Youtube Videos
 -   Types for Reactive and Ref
--   TODO
-
-20/05/2025
-
+-   TODO sections
 -   Attach video, description text area
--   Connect Youtube with oAuth2
 -   Cache Redis
+
+-   Better segregation of code structure is missing
+-   Connection with youtube to feed off videos
+-   Cleaner routes + cleaner code
+-   Environments need to be setup

@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Hub;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
 use App\Http\Requests\Module\StoreModuleRequest;
 use App\Http\Requests\Module\UpdateModuleRequest;
 use App\Models\Module;
-use App\Models\Status;
 use App\Services\ModuleService;
 use Inertia\Inertia;
-use Exception;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;
 

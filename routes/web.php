@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Company\CompanyController;
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Hub\CourseController;
-use App\Http\Controllers\Hub\ModuleController;
-use App\Http\Controllers\Video\YoutubeController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\YoutubeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('modules/create', [ModuleController::class, 'store'])->name('modules.store');
     Route::get('modules/generate', [YoutubeController::class, 'index'])->name('modules.generate');
     Route::post('modules/generate', [YoutubeController::class, 'store'])->name('modules.generate.store');
+    Route::get('modules/auth', [YoutubeController::class, 'auth'])->name('modules.generate.auth');
+
     Route::get('modules/{module}', [ModuleController::class, 'show'])->name('modules.show');
     Route::put('modules/{module}', [ModuleController::class, 'update'])->name('modules.update');
 
