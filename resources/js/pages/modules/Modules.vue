@@ -20,9 +20,9 @@ import Pagination from "@/components/global/Pagination.vue";
 
 const props = defineProps<ModulesIndexProps>();
 
-const searchTerm = ref(props.q);
-const order = ref(`${props.orderBy}|${props.order}`);
-const status = ref(props.status);
+const searchTerm = ref(props.filters.q);
+const order = ref(`${props.filters.orderBy}|${props.filters.order}`);
+const status = ref(props.filters.status);
 const currentPage = ref(props.modules.current_page);
 
 const withModal = ref(props.modal);
@@ -95,8 +95,8 @@ watch(status, getFilteredModules);
                     :statuses="[
                         { label: 'All', value: 'all', count: counts.all },
                         { label: 'Published', value: 'published', count: counts.published },
-                        { label: 'Drafts', value: 'drafts', count: counts.drafts },
-                        { label: 'Trash', value: 'trash', count: counts.trash }
+                        { label: 'Drafts', value: 'draft', count: counts.draft },
+                        { label: 'Trash', value: 'deleted', count: counts.deleted }
                     ]" @status="(s) => status = s" />
 
                 <TableContainer>
@@ -115,7 +115,7 @@ watch(status, getFilteredModules);
                             :items="[
                                 module.title,
                                 module.description,
-                                capitalizeFirstLetter(module.status),
+                                capitalizeFirstLetter(module.status_slug),
                             ]"
                             :sizes="[3, 5, 3, 1]"
                             :link="`/modules/${module.id}`"

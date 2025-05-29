@@ -2,102 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Module\ModuleFilterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
-use App\Services\ModuleService;
+use App\Services\Module\ModuleQueryService;
 use App\Services\YoutubeService;
 use Exception;
 use Google\Client;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class YoutubeController extends Controller
 {
     /**
-     * @brief   The module service instance.
+     * Constructor to define the dependency injection.
      */
-    protected ModuleService $moduleService;
-    protected YoutubeService $youtubeService;
+    function __construct(
+        private readonly YoutubeService $youtubeService,
+        private readonly ModuleQueryService $queryService
+    ) {}
 
     /**
-     * @brief   Constructor to define the resource access (viewing).
-     *          Injection of ModuleService dependency.
-     */
-    public function __construct(ModuleService $moduleService, YoutubeService $youtubeService)
-    {
-        $this->moduleService = $moduleService;
-        $this->youtubeService = $youtubeService;
-    }
-
-    /**
-     * @brief   Query for the modules with search and ordering + sending props for modal opening.
+     * Query for the modules with search and ordering + sending props for modal opening.
      *
      * @param   \App\Http\Requests\Module\IndexModuleRequest $request
      *
-     * @return  \Symfony\Component\HttpFoundation\Response
+     * @return  \Illuminate\Http\RedirectResponse|\Inertia\Response
      */
-    public function index(IndexModuleRequest $request): SymfonyResponse
+    public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
-        try {
-            $companyId = $request->user()->company_id;
+        $filterData = ModuleFilterData::fromRequest($request);
+        $result = $this->queryService->getFilteredModules($filterData);
 
-            $validated = $request->validated();
+        // TODO: Redirect to first page on error
+        // if ($this->shouldRedirectToFirstPage($request, $result['paginator'])) {
+        //     return $this->redirectToFirstPage($request);
+        // }
 
-            $search   = $validated['q']        ?? '';
-            $order    = $validated['order']    ?? 'asc';
-            $orderBy  = $validated['orderBy']  ?? 'created_at';
-            $status   = $validated['status']   ?? 'all';
-            $perPage  = 12;
-
-            $result = $this->moduleService->listModules(
-                $companyId,
-                $search,
-                $orderBy,
-                $order,
-                $status,
-                $perPage
-            );
-
-            $paginator = $result['paginator'];
-
-            if ($request->page && $paginator->lastPage() > 0 && $request->page > $paginator->lastPage()) {
-                return redirect()->route('modules.index', array_merge(
-                    $request->except('page'),
-                    ['page' => 1]
-                ))->with('warning', __('pagination.invalid_page', [
-                    'page'     => $request->page,
-                    'lastPage' => $paginator->lastPage(),
-                ]));
-            }
-
-            return Inertia::render('modules/Modules', [
-                'modules' => $paginator,
-                'q'       => $search,
-                'order'   => $order,
-                'orderBy' => $orderBy,
-                'status'  => $status,
-                'counts'  => $result['counts'],
-                'modal'   => 'VideoGenerateModal'
-            ])->with('success', 'general.success')
-                ->toResponse($request)
-                ->setStatusCode(SymfonyResponse::HTTP_OK);
-        } catch (Exception $e) {
-            Log::error('Error showing module', [
-                'user_id'   => Auth::id(),
-                'error'     => $e->getMessage(),
-                'trace'     => $e->getTraceAsString()
-            ]);
-
-            return Inertia::render('modules/Modules')
-                ->with('errors', 'errors.internal-server-error')
-                ->toResponse($request)
-                ->setStatusCode(SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return Inertia::render('modules/Modules', $result);
     }
 
     public function store()

@@ -22,10 +22,10 @@ class IndexModuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'q'       => ['nullable', 'string', 'max:255'],
-            'order'   => ['nullable', 'in:asc,desc'],
+            'q' => ['nullable', 'string', 'max:255'],
+            'order' => ['nullable', 'in:asc,desc'],
             'orderBy' => ['nullable', 'in:title,created_at,updated_at'],
-            'status'  => ['nullable', 'in:all,drafts,published,trash'],
+            'status' => ['nullable', 'in:all,draft,published,deleted'],
         ];
     }
 }

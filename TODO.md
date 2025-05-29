@@ -16,3 +16,9 @@
 -   Connection with youtube to feed off videos
 -   Cleaner routes + cleaner code
 -   Environments need to be setup
+
+-   Refactoring
+    - Resources
+    - Bunch of TODOs
+    - Annotations of functions + Models
+    - Care about n+1

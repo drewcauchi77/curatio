@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ModuleScopes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Module extends Model
 {
-    use HasUuids;
+    use HasUuids, ModuleScopes;
 
     /**
      * The attributes that are mass assignable.
@@ -67,6 +68,7 @@ class Module extends Model
      *
      * @return  string
      */
+    // TODO n+1
     public function getStatusSlugAttribute(): string
     {
         return $this->status->status;

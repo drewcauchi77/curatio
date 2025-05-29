@@ -28,9 +28,9 @@ export interface FilterProps {
 };
 
 export interface CountProps {
-    drafts: number;
+    draft: number;
     published: number;
-    trash: number;
+    deleted: number;
     all: number;
 };
 
@@ -140,9 +140,10 @@ export interface ModulePaginationResponse extends PaginationResponse {
     data: Module[];
 };
 
-export interface ModulesIndexProps extends FilterProps {
+export interface ModulesIndexProps {
     modules: ModulePaginationResponse;
     counts: CountProps;
+    filters: FilterProps;
     modal?: ModuleAvailableModals;
     flash: FlashResponse;
 };

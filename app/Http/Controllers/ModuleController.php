@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Module\ModuleFilterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
 use App\Http\Requests\Module\StoreModuleRequest;
 use App\Http\Requests\Module\UpdateModuleRequest;
 use App\Models\Module;
-use App\Services\ModuleService;
+use App\Services\Module\ModuleQueryService;
+use App\Services\Module\ModuleService;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;
@@ -15,22 +17,17 @@ use Inertia\Response as InertiaResponse;
 class ModuleController extends Controller
 {
     /**
-     * @brief   The module service instance.
+     * Constructor to define the resource access & dependency injection.
      */
-    protected ModuleService $moduleService;
-
-    /**
-     * @brief   Constructor to define the resource access (viewing).
-     *          Injection of ModuleService dependency.
-     */
-    public function __construct(ModuleService $moduleService)
-    {
+    function __construct(
+        private readonly ModuleService $moduleService,
+        private readonly ModuleQueryService $queryService
+    ) {
         $this->authorizeResource(Module::class, 'module');
-        $this->moduleService = $moduleService;
     }
 
     /**
-     * @brief   Query for the modules with search and ordering.
+     * Query for the modules with search and ordering.
      *
      * @param   \App\Http\Requests\Module\IndexModuleRequest $request
      *
@@ -38,49 +35,19 @@ class ModuleController extends Controller
      */
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
-        $companyId = $request->user()->company_id;
+        $filterData = ModuleFilterData::fromRequest($request);
+        $result = $this->queryService->getFilteredModules($filterData);
 
-        $validated = $request->validated();
+        // TODO: Redirect to first page on error
+        // if ($this->shouldRedirectToFirstPage($request, $result['paginator'])) {
+        //     return $this->redirectToFirstPage($request);
+        // }
 
-        $search   = $validated['q']        ?? '';
-        $order    = $validated['order']    ?? 'asc';
-        $orderBy  = $validated['orderBy']  ?? 'created_at';
-        $status   = $validated['status']   ?? 'all';
-        $perPage  = 12;
-
-        $result = $this->moduleService->listModules(
-            $companyId,
-            $search,
-            $orderBy,
-            $order,
-            $status,
-            $perPage
-        );
-
-        $paginator = $result['paginator'];
-
-        if ($request->page && $paginator->lastPage() > 0 && $request->page > $paginator->lastPage()) {
-            return redirect()->route('modules.index', array_merge(
-                $request->except('page'),
-                ['page' => 1]
-            ))->with([
-                'success'   => false,
-                'message'   => 'general.page-not-available'
-            ]);
-        }
-
-        return Inertia::render('modules/Modules', [
-            'modules' => $paginator,
-            'q'       => $search,
-            'order'   => $order,
-            'orderBy' => $orderBy,
-            'status'  => $status,
-            'counts'  => $result['counts']
-        ]);
+        return Inertia::render('modules/Modules', $result);
     }
 
     /**
-     * @brief   Show the form to create a new module.
+     * Show the form to create a new module.
      * 
      * @return  \Inertia\Response
      */
@@ -90,7 +57,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * @brief   Action to create a new module.
+     * Action to create a new module.
      * 
      * @param   \App\Http\Requests\Module\StoreModuleRequest $request
      * 
@@ -116,7 +83,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * @brief   Show the module page.
+     * Show the module page.
      * 
      * @param   \App\Models\Module $module
      * 
@@ -132,10 +99,12 @@ class ModuleController extends Controller
     }
 
     /**
-     * @brief   Update an existing module.
+     * Update an existing module.
      * 
      * @param   \App\Http\Requests\Module\UpdateModuleRequest $request
      * @param   \App\Models\Module $module
+     * 
+     * @return  \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateModuleRequest $request, Module $module): RedirectResponse
     {

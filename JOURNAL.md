@@ -1,23 +1,11 @@
 ### 27/05/2025
 
-#### Issue
-
-Initially, I used Laravel Herd, which automatically managed the local environment. Laravel Herd provided a local `.test` domain, but Google and YouTube APIs require a top-level domain for OAuth. Because `.test` domains are not considered top-level, I couldn't fully implement Google's OAuth process. Laravel Herd also handled PHP setup, environment variables, and paths automatically.
-
-#### Solution
-
-I transitioned from Laravel Herd to a standard Laravel installation with Vite. To maintain hot-reloading functionality, I modified the Vite configuration. Previously, Laravel Herd managed the php artisan serve command, and I only needed to run Vite to compile frontend changes. Now, I run two commands separately:
- - `php -S 0.0.0.0:80 -t public` to launch the PHP server on port `80`.
- - `npm run dev` to compile the frontend on port `5173`.
- 
-I adjusted `vite.config.ts` to handle requests seamlessly from port `5173` to port `80`. Additionally, I edited my Windows hosts file by adding `127.0.0.1 curatio.com`. My local project now runs successfully at `curatio.com`, meeting Google's API requirements for a top-level domain.
+I initially used Laravel Herd for local development, which simplified setup by managing PHP, environment variables, and providing a `.test` domain. However, Google and YouTube OAuth APIs require a top-level domain, and `.test` doesn’t qualify, blocking full OAuth integration. To solve this, today I moved to a standard Laravel installation with Vite. I now run `php -S 0.0.0.0:80 -t public` for the backend and `npm run dev` for the frontend. I updated `vite.config.ts` to proxy requests from port `5173` to `80`, and added `127.0.0.1 curatio.com` to my Windows hosts file. With the project now accessible at `curatio.com`, I will be testing tomorrow if OAuth with Google works as expected.
 
 ### 28/05/2025
 
-#### Issue
+I ran into an `cURL error 60: SSL peer certificate or SSH remote key was not OK` error while integrating Google's and YouTube's APIs via OAuth, caused by my local server not trusting Google's SSL certificate. OAuth itself was also more complicated than expected - especially around token handling and my controller logic becoming messy and hard to manage. As a temporary fix, I disabled SSL verification in Guzzle for local development, but I plan to conditionally disable it in production and staging for security. I used the `google/apiclient` package in Laravel to get a basic OAuth flow working, although I’ve had simpler experiences doing this in NodeJS. Next, I’ll persist tokens outside of Laravel sessions so I can run scheduled jobs to fetch and update videos. I also plan to refactor the code using repositories and DTOs to clean up the controller logic and improve maintainability.
 
-I wanted to integrate Google's and YouTube's APIs via OAuth to fetch YouTube videos. However, I encountered an SSL/SSH issue: `cURL error 60: SSL peer certificate or SSH remote key was not OK`. This error appeared because Google's endpoint uses a certificate my local server did not trust. Additionally, I struggled with OAuth implementation, specifically around receiving and managing tokens. The process was more complex than expected. I'm also not satisfied with my code structure. My controllers handle too much logic, making the code difficult to manage.
+### 29/05/2025
 
-#### Solution
-
-For now, I temporarily bypassed SSL verification in `Guzzle` for Google's API requests. Later, I'll refactor this by adding environment-specific logic. In development and production environments, SSL verification will remain enabled for security reasons. I've previously implemented OAuth with Google's API using NodeJS, which was simpler. For Laravel, I used the `google/apiclient` package to create a basic working solution. In the next phase, I'll persist OAuth tokens outside Laravel's session. This approach will allow cron jobs to regularly fetch videos and update modules. To improve code readability and maintainability, I'll soon introduce repositories and DTOs to better separate responsibilities.
+The codebase was getting messy, with too much logic crammed into the controllers - especially the Module controller - which made things hard to manage. Since controllers should stay lean, I refactored the structure by introducing a `ModuleRepository`, a `DTO`, a `ModuleQueryService` for handling GET requests, and my new favourite a `ModuleScopes` file. This cleaned up the controller significantly and made the logic easier to follow. The frontend still works well with these changes, though I plan to improve it further in the coming days. There are still a few outstanding tasks marked with TODOs, including fixing an `N+1` query issue related to the Module model’s status and adding missing function annotations. My priority is to get the codebase into a clean, understandable state before moving on to new features.
