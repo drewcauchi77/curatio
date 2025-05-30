@@ -14,10 +14,22 @@ use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;
 
+/**
+ * Controller for managing module resources.
+ * 
+ * Handles CRUD operations for modules including listing, creating, viewing and updating modules within a company context. 
+ * All actions are authorized through Laravel's resource authorization.
+ */
 class ModuleController extends Controller
 {
     /**
-     * Constructor to define the resource access & dependency injection.
+     * Create a new ModuleController instance.
+     * 
+     * Sets up dependency injection for module services and configures
+     * resource-based authorization for all Module model operations.
+     *
+     * @param   ModuleService $moduleService -> Service for module business logic operations
+     * @param   ModuleQueryService $queryService -> Service for module data retrieval and filtering
      */
     function __construct(
         private readonly ModuleService $moduleService,
@@ -27,11 +39,13 @@ class ModuleController extends Controller
     }
 
     /**
-     * Query for the modules with search and ordering.
+     * Display a paginated listing of modules with filtering and search capabilities.
+     * Processes the request parameters to create filter criteria and returns a paginated list of modules. Supports search, ordering, and status filtering.
      *
-     * @param   \App\Http\Requests\Module\IndexModuleRequest $request
-     *
-     * @return  \Illuminate\Http\RedirectResponse|\Inertia\Response
+     * @param   IndexModuleRequest $request -> Validated request containing filter parameters
+     * @return  RedirectResponse|InertiaResponse -> Inertia response with module data or redirect on error
+     * 
+     * @throws  \Illuminate\Auth\Access\AuthorizationException -> If user cannot view modules
      */
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
@@ -47,9 +61,13 @@ class ModuleController extends Controller
     }
 
     /**
-     * Show the form to create a new module.
+     * Show the form for creating a new module.
+     * Renders the module creation form using Inertia.js. 
+     * Authorization is handled automatically through the resource authorization setup.
      * 
-     * @return  \Inertia\Response
+     * @return  InertiaResponse -> The create module form page
+     * 
+     * @throws  \Illuminate\Auth\Access\AuthorizationException -> If user cannot create modules
      */
     public function create(): InertiaResponse
     {
@@ -57,24 +75,24 @@ class ModuleController extends Controller
     }
 
     /**
-     * Action to create a new module.
+     * Store a newly created module in the database.
+     * Creates a new module with the validated data from the request.
+     * Performs additional authorization check with the specific attributes before delegating to the module service for creation.
+     *
+     * @param   StoreModuleRequest $request -> Validated request containing module data
+     * @return  RedirectResponse -> Redirect to the newly created module's show page
      * 
-     * @param   \App\Http\Requests\Module\StoreModuleRequest $request
-     * 
-     * @return  \Illuminate\Http\RedirectResponse
+     * @throws  \Illuminate\Auth\Access\AuthorizationException -> If user cannot create module with given attributes
+     * @throws  \Illuminate\Database\QueryException -> If database operation fails
      */
     public function store(StoreModuleRequest $request): RedirectResponse
     {
-        // Create attributes to pass to authorization in policy.
         $attributes = [
             'company_id' => $request->user()->company_id,
             ...$request->safe()->only(['title', 'description', 'status_id']),
         ];
 
-        // Authorize the store action with the attributes.
         $this->authorize('store', [Module::class, $attributes]);
-
-        // Calling the creation service through the dependency injection.
         $module = $this->moduleService->createModule($attributes);
 
         return redirect()->route('modules.show', [
@@ -83,11 +101,15 @@ class ModuleController extends Controller
     }
 
     /**
-     * Show the module page.
+     * Display the specified module.
+     * Shows the detailed view of a single module including its related status information. 
+     * The module is automatically resolved through route model binding.
+     *
+     * @param   Module $module -> The module instance resolved from route binding
+     * @return  InertiaResponse -> The module detail page
      * 
-     * @param   \App\Models\Module $module
-     * 
-     * @return  \Inertia\Response
+     * @throws  \Illuminate\Auth\Access\AuthorizationException -> If user cannot view this module
+     * @throws  \Illuminate\Database\Eloquent\ModelNotFoundException -> If module not found
      */
     public function show(Module $module): InertiaResponse
     {
@@ -99,12 +121,16 @@ class ModuleController extends Controller
     }
 
     /**
-     * Update an existing module.
+     * Update the specified module in the database.
+     * Updates an existing module with the validated data from the request.
+     * Returns a redirect with success notification after successful update.
+     *
+     * @param   UpdateModuleRequest $request -> Validated request containing updated module data
+     * @param   Module $module -> The module instance to update (resolved from route binding)
+     * @return  RedirectResponse -> Redirect to module show page with success message
      * 
-     * @param   \App\Http\Requests\Module\UpdateModuleRequest $request
-     * @param   \App\Models\Module $module
-     * 
-     * @return  \Illuminate\Http\RedirectResponse
+     * @throws  \Illuminate\Auth\Access\AuthorizationException -> If user cannot update this module
+     * @throws  \Illuminate\Database\QueryException -> If database operation fails
      */
     public function update(UpdateModuleRequest $request, Module $module): RedirectResponse
     {
