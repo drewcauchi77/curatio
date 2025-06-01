@@ -30,6 +30,12 @@
             }
         }
     },
+    "success": {
+        "success": "Success",
+        "module": {
+            "create-success": "Module has been created successfully!"
+        }
+    },
     "input": {
         "placeholders": {
             "email": "john.doe@example.com",

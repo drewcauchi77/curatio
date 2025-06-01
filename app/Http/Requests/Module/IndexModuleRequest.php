@@ -4,10 +4,15 @@ namespace App\Http\Requests\Module;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Validates module listing/index requests.
+ */
 class IndexModuleRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Check if user is authorized to list modules.
+     * 
+     * @return bool Always true (authorization handled by controller)
      */
     public function authorize(): bool
     {
@@ -15,9 +20,9 @@ class IndexModuleRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Get validation rules for filtering and sorting parameters.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array Validation rules for search, ordering, and status filters
      */
     public function rules(): array
     {

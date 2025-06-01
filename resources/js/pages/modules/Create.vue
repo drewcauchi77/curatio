@@ -10,14 +10,13 @@ import { ModulesCreateProps } from "@/definitions/interfaces";
 import PublishMenu from "@/components/sidebar/PublishMenu.vue";
 
 const isEdit = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 const props = defineProps<ModulesCreateProps>();
 
 onMounted((): void => {
     if (props.module) isEdit.value = true;
 });
-
-const isLoading = ref<boolean>(false);
 
 const moduleForm: InertiaForm<CreateModuleForm> = useForm({
     title: props.module?.title || '',

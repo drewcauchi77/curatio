@@ -8,14 +8,18 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Inertia\Inertia;
 
+/**
+ * Validates module creation requests.
+ */
 class StoreModuleRequest extends FormRequest
 {
     use HasModuleRules;
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Check if user is authorized to create modules.
+     * 
+     * @return bool True if user has create permission
      */
     public function authorize(): bool
     {
@@ -23,34 +27,51 @@ class StoreModuleRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Get validation rules for the request.
+     * 
+     * @return array Module validation rules from trait
      */
     public function rules(): array
     {
         return $this->moduleRules();
     }
 
-    // TODO
     /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * Handle failed validation for both JSON and web requests.
      * 
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     * @param Validator $validator The failed validator instance
+     * @throws HttpResponseException For JSON requests
+     * @throws ValidationException For web requests
      */
+    // TODO
     protected function failedValidation(Validator $validator)
     {
-        $response = Inertia::render('modules/Create', [
-            // re-pass whatever props you need in the form component
-            'module' => $this->route('module'),
-        ])->with([
-            'success'   => false,
-            'message'   => 'general.page-not-available'
-        ])->toResponse($this)
-            ->setStatusCode(422);
+        if ($this->wantsJson()) {
+            throw new HttpResponseException(
+                response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => $validator->errors(),
+                ], 422)
+            );
+        }
 
-        throw new HttpResponseException($response);
+        throw (new ValidationException($validator))
+            ->errorBag($this->errorBag)
+            ->redirectTo($this->getRedirectUrl());
+    }
+
+    /**
+     * Get custom validation error messages.
+     * 
+     * @return array Custom messages for validation errors
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'The module title is required.',
+            'title.max' => 'The module title cannot exceed :max characters.',
+            'status_id.required' => 'Please select a status for the module.',
+            'status_id.exists' => 'The selected status is invalid.',
+        ];
     }
 }

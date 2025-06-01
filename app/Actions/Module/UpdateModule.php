@@ -9,12 +9,28 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Updates an existing module within a database transaction.
+ */
 final class UpdateModule
 {
+    /**
+     * Initialize action with repository dependency.
+     * 
+     * @param ModuleRepository $moduleRepository Repository for module persistence
+     */
     function __construct(
         private readonly ModuleRepository $moduleRepository
     ) {}
 
+    /**
+     * Update module attributes and reload its status relationship.
+     *
+     * @param Module $module The module to update
+     * @param ModuleData $data New module data to apply
+     * @return Module The updated module with fresh status
+     * @throws Exception If update operation fails
+     */
     public function handle(Module $module, ModuleData $data): Module
     {
         return DB::transaction(function () use ($module, $data) {
@@ -28,7 +44,6 @@ final class UpdateModule
                 ]);
 
                 // TODO event?
-
                 $module->load('status');
 
                 return $module;

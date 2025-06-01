@@ -4,6 +4,9 @@ namespace App\Models\Scopes;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
+/**
+ * Query scopes for Module model.
+ */
 trait ModuleScopes
 {
     /**

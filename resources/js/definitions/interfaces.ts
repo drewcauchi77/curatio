@@ -150,10 +150,12 @@ export interface ModulesIndexProps {
 
 export interface ModulesShowProps {
     module: Module;
+    flash?: FlashResponse | undefined;
 };
 
 export interface ModulesCreateProps {
     module?: Module;
+    flash?: FlashResponse | undefined;
 };
 
 /**

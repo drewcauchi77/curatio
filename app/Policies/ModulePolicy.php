@@ -4,12 +4,17 @@ namespace App\Policies;
 
 use App\Models\Module;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
+/**
+ * Authorization policy for module operations.
+ */
 class ModulePolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Check if user can view module listings.
+     * 
+     * @param User $user The user to authorize
+     * @return bool True if user belongs to a company
      */
     public function viewAny(User $user): bool
     {
@@ -17,7 +22,11 @@ class ModulePolicy
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Check if user can view a specific module.
+     * 
+     * @param User $user The user to authorize
+     * @param Module $module The module to view
+     * @return bool True if user's company matches module's company
      */
     public function view(User $user, Module $module): bool
     {
@@ -25,25 +34,36 @@ class ModulePolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Check if user can access module creation form.
+     * 
+     * @param User $user The user to authorize
+     * @return bool True if user has company and is admin (role_id 1)
      */
     public function create(User $user): bool
     {
-        // Check if the user has a company id and appropriate role.
         return $user->company_id && $user->role_id === 1;
     }
 
     /**
-     * Determine whether the user can store a new module with specific attributes.
+     * Check if user can store a module with given attributes.
+     * 
+     * @param User $user The user to authorize
+     * @param array $attributes Module attributes to validate
+     * @return bool True if company matches and user is admin
      */
     public function store(User $user, array $attributes): bool
     {
-        // Check if the company_id in the attributes matches the user's company_id and the user has the appropriate role.
-        return isset($attributes['company_id']) && $attributes['company_id'] === $user->company_id && $user->role_id === 1;
+        return isset($attributes['company_id']) &&
+            $attributes['company_id'] === $user->company_id &&
+            $user->role_id === 1;
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Check if user can update a module.
+     * 
+     * @param User $user The user to authorize
+     * @param Module $module The module to update
+     * @return bool True if user's company matches and is admin
      */
     public function update(User $user, Module $module): bool
     {
@@ -51,7 +71,11 @@ class ModulePolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Check if user can delete a module.
+     * 
+     * @param User $user The user to authorize
+     * @param Module $module The module to delete
+     * @return bool True if user can update (same permissions)
      */
     public function delete(User $user, Module $module): bool
     {

@@ -5,12 +5,17 @@ namespace App\Http\Requests\Module;
 use App\Traits\HasModuleRules;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Validates module update requests.
+ */
 class UpdateModuleRequest extends FormRequest
 {
     use HasModuleRules;
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Check if user is authorized to update the module.
+     * 
+     * @return bool True if user has update permission for the route module
      */
     public function authorize(): bool
     {
@@ -19,9 +24,9 @@ class UpdateModuleRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return  array<string, Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Get validation rules for the request.
+     * 
+     * @return array Module validation rules from trait
      */
     public function rules(): array
     {

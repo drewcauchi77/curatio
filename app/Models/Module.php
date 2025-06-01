@@ -8,6 +8,22 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * Module model.
+ * 
+ * @property string $id Primary UUID
+ * @property string $title Module title
+ * @property string|null $description Module description
+ * @property string $company_id Foreign key to companies
+ * @property int $status_id Foreign key to statuses
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * 
+ * @property-read string $status_slug Status slug (draft, published, etc.)
+ * @property-read \App\Models\Company $company
+ * @property-read \App\Models\Status $status
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Course> $courses
+ */
 class Module extends Model
 {
     use HasUuids, ModuleScopes;
@@ -25,7 +41,16 @@ class Module extends Model
     ];
 
     /**
-     * The attributes that are assigned.
+     * The attributes that should be eager loaded.
+     *
+     * @var list<string>
+     */
+    protected $with = [
+        'status'
+    ];
+
+    /**
+     * The attributes that are appended.
      *
      * @var list<string>
      */
@@ -34,9 +59,9 @@ class Module extends Model
     ];
 
     /**
-     * @brief   Get courses associated with the module.
+     * Get the courses that contain this module.
      *
-     * @return  \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Course, $this>
+     * @return BelongsToMany<Course, $this>
      */
     public function courses(): BelongsToMany
     {
@@ -44,9 +69,9 @@ class Module extends Model
     }
 
     /**
-     * @brief   Get the company associated with the module.
+     * Get the company that owns this module.
      *
-     * @return  \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Company, $this>
+     * @return BelongsTo<Company, $this>
      */
     public function company(): BelongsTo
     {
@@ -54,9 +79,9 @@ class Module extends Model
     }
 
     /**
-     * @brief   Get the status associated with the module.
+     * Get the status of this module.
      *
-     * @return  \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Status, $this>
+     * @return BelongsTo<Status, $this>
      */
     public function status(): BelongsTo
     {
@@ -64,11 +89,10 @@ class Module extends Model
     }
 
     /**
-     * @brief   Get the status as slug associated with the module (draft, published, trash, ...).
+     * Get the status slug accessor (draft, published, etc.).
      *
-     * @return  string
+     * @return string
      */
-    // TODO n+1
     public function getStatusSlugAttribute(): string
     {
         return $this->status->status;
