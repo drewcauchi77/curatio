@@ -9,3 +9,7 @@ I ran into an `cURL error 60: SSL peer certificate or SSH remote key was not OK`
 ### 29/05/2025
 
 The codebase was getting messy, with too much logic crammed into the controllers - especially the Module controller - which made things hard to manage. Since controllers should stay lean, I refactored the structure by introducing a `ModuleRepository`, a `DTO`, a `ModuleQueryService` for handling GET requests, and my new favourite a `ModuleScopes` file. This cleaned up the controller significantly and made the logic easier to follow. The frontend still works well with these changes, though I plan to improve it further in the coming days. There are still a few outstanding tasks marked with TODOs, including fixing an `N+1` query issue related to the Module model’s status and adding missing function annotations. My priority is to get the codebase into a clean, understandable state before moving on to new features.
+
+### 01/06/2025
+
+PHP stan installed with level 7 run with ./vendor/bin/phpstan analyse. Run and it had 38 errors

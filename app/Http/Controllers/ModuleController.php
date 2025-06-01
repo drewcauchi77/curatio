@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Module\CreateModule;
+use App\Actions\Module\UpdateModule;
+use App\DTO\Module\ModuleData;
 use App\DTO\Module\ModuleFilterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
@@ -32,8 +35,7 @@ class ModuleController extends Controller
      * @param   ModuleQueryService $queryService -> Service for module data retrieval and filtering
      */
     function __construct(
-        private readonly ModuleService $moduleService,
-        private readonly ModuleQueryService $queryService
+        private readonly ModuleQueryService $queryService,
     ) {
         $this->authorizeResource(Module::class, 'module');
     }
@@ -85,19 +87,17 @@ class ModuleController extends Controller
      * @throws  \Illuminate\Auth\Access\AuthorizationException -> If user cannot create module with given attributes
      * @throws  \Illuminate\Database\QueryException -> If database operation fails
      */
-    public function store(StoreModuleRequest $request): RedirectResponse
+    public function store(CreateModule $action, StoreModuleRequest $request): RedirectResponse
     {
-        $attributes = [
-            'company_id' => $request->user()->company_id,
-            ...$request->safe()->only(['title', 'description', 'status_id']),
-        ];
+        $moduleData = ModuleData::fromStoreRequest($request);
+        $this->authorize('store', [Module::class, $moduleData->toArray()]);
+        $module = $action->handle($moduleData);
 
-        $this->authorize('store', [Module::class, $attributes]);
-        $module = $this->moduleService->createModule($attributes);
-
-        return redirect()->route('modules.show', [
-            'module' => $module,
-        ]);
+        return redirect()->route('modules.show', ['module' => $module])
+            ->with([
+                'success' => true,
+                'message' => 'module.create-success',
+            ]);
     }
 
     /**
@@ -132,16 +132,16 @@ class ModuleController extends Controller
      * @throws  \Illuminate\Auth\Access\AuthorizationException -> If user cannot update this module
      * @throws  \Illuminate\Database\QueryException -> If database operation fails
      */
-    public function update(UpdateModuleRequest $request, Module $module): RedirectResponse
+    public function update(UpdateModule $action, UpdateModuleRequest $request, Module $module): RedirectResponse
     {
-        // Calling the update service through the dependency injection.
-        $module = $this->moduleService->updateModule($module, $request->validated());
+        $moduleData = ModuleData::fromUpdateRequest($request);
+        $module = $action->handle($module, $moduleData);
 
-        return redirect()->route('modules.show', [
-            'module' => $module
-        ])->with([
-            'success'   => true,
-            'message'   => 'module.update-success'
-        ]);
+        return redirect()
+            ->route('modules.show', ['module' => $module])
+            ->with([
+                'success' => true,
+                'message' => 'module.update-success',
+            ]);
     }
 }
