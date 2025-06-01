@@ -12,4 +12,4 @@ The codebase was getting messy, with too much logic crammed into the controllers
 
 ### 01/06/2025
 
-PHP stan installed with level 7 run with ./vendor/bin/phpstan analyse. Run and it had 38 errors
+Installed PHPStan with level 7 and ran it across the codebase - some errors showed up, which I’ll address later. Continued the refactoring, and the module is almost complete now. I added actions, finalized the repositories, and will review the full implementation next to ensure everything is working as expected. Also added annotations throughout the module code to align with Laravel best practices.
