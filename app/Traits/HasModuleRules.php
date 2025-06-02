@@ -10,7 +10,7 @@ trait HasModuleRules
     /**
      * Get validation rules for module fields.
      * 
-     * @return array Validation rules for title, description, and status_id
+     * @return array<string, list<string>> Validation rules for title, description, and status_id
      */
     protected function moduleRules(): array
     {

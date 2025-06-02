@@ -145,6 +145,7 @@ export interface ModulesIndexProps {
     counts: CountProps;
     filters: FilterProps;
     modal?: ModuleAvailableModals;
+    connection?: YoutubeConnectionProps;
     flash: FlashResponse;
 };
 
@@ -156,6 +157,19 @@ export interface ModulesShowProps {
 export interface ModulesCreateProps {
     module?: Module;
     flash?: FlashResponse | undefined;
+};
+
+/**
+ * Youtube Connection Definitions
+ */
+export interface YoutubeConnectionProps {
+    authUrl: string | null;
+    connected: boolean;
+};
+
+export interface VideoGenerateProps {
+    title: string;
+    connection: YoutubeConnectionProps;
 };
 
 /**

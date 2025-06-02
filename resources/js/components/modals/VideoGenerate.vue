@@ -4,20 +4,12 @@ import { X } from 'lucide-vue-next';
 import { useForm, router, Link } from '@inertiajs/vue3';
 import { useStatusStore } from '@/store/status.store';
 import { Button } from '@/components/ui/button';
+import { VideoGenerateProps } from '@/definitions/interfaces';
 
 const statusStore = useStatusStore();
 const isVisible = ref(false);
 
-defineProps({
-    isOpen: {
-        type: Boolean,
-        default: false
-    },
-    title: {
-        type: String,
-        default: 'Generate Video'
-    }
-});
+defineProps<VideoGenerateProps>();
 
 const closeModal = () => {
     isVisible.value = false;
@@ -83,23 +75,28 @@ const handleSubmit = () => {
                 </slot>
             </div>
             
+            <div v-if="connection.connected">
+                <span>Connected</span>
+            </div>
+            <div v-else>
+                <a :href="connection.authUrl">Auth</a>
+            </div>
+
             <!-- Modal footer -->
             <div class="sticky bottom-0 border-t border-border bg-background p-4">
                 <div class="flex justify-end gap-3">
-                <Button
-                    variant="outline"
-                    @click="closeModal"
-                >
-                    Cancel
-                </Button>
-                <Button
-                    @click="handleSubmit"
-                    :disabled="channelForm.processing"
-                >
-                    Connect your Youtube Account
-                </Button>
-
-                
+                    <Button
+                        variant="outline"
+                        @click="closeModal"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        @click="handleSubmit"
+                        :disabled="channelForm.processing"
+                    >
+                        Connect your Youtube Account
+                    </Button>
                 </div>
             </div>
         </div>

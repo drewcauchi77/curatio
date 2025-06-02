@@ -8,11 +8,6 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\YoutubeController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/', function () {
-    return Inertia::render('Home');
-})->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [SessionController::class, 'create'])->name('login');

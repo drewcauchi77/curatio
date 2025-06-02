@@ -36,29 +36,9 @@ class YoutubeController extends Controller
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
         $filterData = ModuleFilterData::fromRequest($request);
-        $result = $this->queryService->getFilteredModules($filterData);
+        $result = $this->queryService->getFilteredModulesWithModal($filterData, 'VideoGenerateModal');
 
-        // TODO: Redirect to first page on error
-        // if ($this->shouldRedirectToFirstPage($request, $result['paginator'])) {
-        //     return $this->redirectToFirstPage($request);
-        // }
-
-        return Inertia::render('modules/Modules', $result);
-    }
-
-    public function store()
-    {
-        try {
-            $result = $this->youtubeService->getChannel();
-            dd($result->items);
-        } catch (Exception $e) {
-            dd($e);
-        }
-    }
-
-    public function auth(Request $request)
-    {
-        $redirectUrl = "https://redirectmeto.com/http://curatio.com/modules/authe";
+        $redirectUrl = "https://redirectmeto.com/http://curatio.com/modules/generate?auth=successful";
         $client = new Client();
         $client->setAuthConfig(base_path('youtube.json'));
         $client->setRedirectUri($redirectUrl);
@@ -108,9 +88,28 @@ class YoutubeController extends Controller
             $authUrl = $client->createAuthUrl();
         }
 
-        return Inertia::render('modules/Auth', [
+        // TODO: Redirect to first page on error
+        // if ($this->shouldRedirectToFirstPage($request, $result['paginator'])) {
+        //     return $this->redirectToFirstPage($request);
+        // }
+
+        $youtube = [
             'connected' => $connected,
             'authUrl' => $authUrl
-        ]);
+        ];
+
+        $finalaa = array_merge($result, ['connection' => $youtube]);
+
+        return Inertia::render('modules/Modules', $finalaa);
+    }
+
+    public function store()
+    {
+        try {
+            $result = $this->youtubeService->getChannel();
+            dd($result->items);
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 }

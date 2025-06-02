@@ -23,7 +23,11 @@ class ModuleQueryService
      * Get filtered modules with status counts and pagination.
      * 
      * @param ModuleFilterData $filters Filter criteria for modules
-     * @return array Contains modules (paginated), counts (by status), and applied filters
+     * @return array{
+     *      modules: mixed, 
+     *      counts: array<string, int>, 
+     *      filters: ModuleFilterData
+     * } Contains modules (paginated), counts (by status), and applied filters
      */
     public function getFilteredModules(ModuleFilterData $filters): array
     {
@@ -35,5 +39,26 @@ class ModuleQueryService
             'counts' => $counts,
             'filters' => $filters
         ];
+    }
+
+    /**
+     * Get filtered modules through getFilteredModules() with a modal to be opened.
+     * 
+     * @param ModuleFilterData $filters Filter criteria for modules
+     * @param string $modal Modal name then handled in Vue
+     * @return array{
+     *      modules: mixed, 
+     *      counts: array<string, int>, 
+     *      filters: ModuleFilterData,
+     *      modal: string
+     * } Contains modules (paginated), counts (by status), applied filters and modal to be opened.
+     */
+    public function getFilteredModulesWithModal(ModuleFilterData $filters, string $modal): array
+    {
+        $data = array_merge($this->getFilteredModules($filters), [
+            'modal' => $modal
+        ]);
+
+        return $data;
     }
 }

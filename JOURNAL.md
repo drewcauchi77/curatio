@@ -13,3 +13,7 @@ The codebase was getting messy, with too much logic crammed into the controllers
 ### 01/06/2025
 
 Installed PHPStan with level 7 and ran it across the codebase - some errors showed up, which I’ll address later. Continued the refactoring, and the module is almost complete now. I added actions, finalized the repositories, and will review the full implementation next to ensure everything is working as expected. Also added annotations throughout the module code to align with Laravel best practices.
+
+### 02/06/2025
+
+Didn't have much time today but still made some small progress. I started fixing some of the PHPStan errors and integrated the YouTube OAuth functionality into one component and one function. Over the next few days, I plan to extract the YouTube and Courses logic into dedicated services to better integrate them with the rest of the project. I also ran into a strange issue with route splitting - when using `require __DIR__` with a path, Inertia routes stopped working. For now, I reverted everything back to a single routes file. Interestingly, after checking some well-known Laravel + Inertia repositories on GitHub, most of them also keep their routes in a single file.
