@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import InputField from '@/components/global/InputField.vue';
 import PageHeader from '@/components/global/PageHeader.vue';
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import { Save, BookOpen, Plus, X, Search, GripVertical } from 'lucide-vue-next';
 
 // Define module interface
@@ -15,8 +15,8 @@ interface Module {
 const props = defineProps({
     modules: {
         type: Array as () => Module[],
-        default: () => []
-    }
+        default: () => [],
+    },
 });
 
 // Track selected modules
@@ -35,16 +35,12 @@ const isDragging = ref(false);
 // Filter modules based on search term
 const filteredModules = computed(() => {
     if (!searchTerm.value) return props.modules;
-    return props.modules.filter(module => 
-        module.title.toLowerCase().includes(searchTerm.value.toLowerCase())
-    );
+    return props.modules.filter((module) => module.title.toLowerCase().includes(searchTerm.value.toLowerCase()));
 });
 
 // Get available modules (not already selected)
 const availableModules = computed(() => {
-    return filteredModules.value.filter(module => 
-        !selectedModules.value.includes(module.id)
-    );
+    return filteredModules.value.filter((module) => !selectedModules.value.includes(module.id));
 });
 
 // Add selected module to the list
@@ -79,15 +75,15 @@ watch(showDropdown, (newVal) => {
 // Drag and drop handlers
 const handleDragStart = (index: number, event: DragEvent) => {
     if (!event.dataTransfer) return;
-    
+
     isDragging.value = true;
     draggedItem.value = index;
-    
+
     // Set data for drag operation
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.dropEffect = 'move';
     event.dataTransfer.setData('text/plain', index.toString());
-    
+
     // Add styling for dragged element
     if (event.target instanceof HTMLElement) {
         setTimeout(() => {
@@ -101,7 +97,7 @@ const handleDragStart = (index: number, event: DragEvent) => {
 const handleDragOver = (index: number, event: DragEvent) => {
     event.preventDefault();
     dragOverItem.value = index;
-    
+
     // Add visual feedback for drag over
     const items = document.querySelectorAll('.module-item');
     items.forEach((item, i) => {
@@ -117,113 +113,120 @@ const handleDragEnd = (event: DragEvent) => {
     isDragging.value = false;
     draggedItem.value = null;
     dragOverItem.value = null;
-    
+
     // Clean up all drag classes
     const items = document.querySelectorAll('.module-item');
-    items.forEach(item => {
+    items.forEach((item) => {
         item.classList.remove('dragging', 'drag-over');
     });
 };
 
 const handleDrop = (index: number, event: DragEvent) => {
     event.preventDefault();
-    
+
     // Only proceed if we have a valid drag source
     if (draggedItem.value === null || draggedItem.value === index) return;
-    
+
     // Reorder the selected modules
     const items = [...selectedModules.value];
     const draggedValue = items[draggedItem.value];
-    
+
     // Remove dragged item from its position
     items.splice(draggedItem.value, 1);
-    
+
     // Insert at new position
     items.splice(index, 0, draggedValue);
-    
+
     // Update the array
     selectedModules.value = items;
     courseForm.moduleIds = selectedModules.value;
-    
+
     // Clean up
     handleDragEnd(event);
 };
 
 const courseForm = useForm({
     title: '',
-    moduleIds: []
+    moduleIds: [],
 });
 
 const handleSubmit = () => {
     courseForm.post(`/courses/create`, {
         onSuccess: (data: any): void => {
-            console.log('onSuccess', data)
-        }
+            console.log('onSuccess', data);
+        },
     });
-}
+};
 </script>
 
 <template>
     <div class="space-y-6">
-        <PageHeader back-link="/courses" 
-            :title="'Create Course Page'" 
-            :has-button="true" 
-            :button-title="'Save'">
+        <PageHeader back-link="/courses" :title="'Create Course Page'" :has-button="true" :button-title="'Save'">
             <Save class="h-4 w-4" />
         </PageHeader>
 
-        <div class="container px-4 mx-auto">
-            <div class="bg-card border border-border rounded-lg p-6">
+        <div class="container mx-auto px-4">
+            <div class="bg-card border-border rounded-lg border p-6">
                 <form class="space-y-5" @submit.prevent="handleSubmit()">
-                    <InputField input-name="title" label-name="Course Title" input-type="text" :placeholder="$t('courses.placeholders.course-title')" v-model="courseForm.title">
+                    <InputField
+                        input-name="title"
+                        label-name="Course Title"
+                        input-type="text"
+                        :placeholder="$t('courses.placeholders.course-title')"
+                        v-model="courseForm.title"
+                    >
                         <BookOpen class="h-5" />
                     </InputField>
 
                     <!-- Module selection -->
                     <div class="space-y-3">
-                        <label class="text-sm font-medium text-foreground block">Course Modules</label>
-                        
+                        <label class="text-foreground block text-sm font-medium">Course Modules</label>
+
                         <!-- Module selector -->
                         <div class="relative">
-                            <div class="flex items-center gap-2 w-full p-2 border border-border rounded-lg bg-background cursor-pointer"
-                                @click="showDropdown = !showDropdown">
-                                <BookOpen class="h-5 w-5 ml-2 text-foreground-light" />
-                                <div class="flex-grow text-sm text-muted-foreground">
+                            <div
+                                class="border-border bg-background flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2"
+                                @click="showDropdown = !showDropdown"
+                            >
+                                <BookOpen class="text-foreground-light ml-2 h-5 w-5" />
+                                <div class="text-muted-foreground flex-grow text-sm">
                                     {{ selectedModules.length ? `${selectedModules.length} module(s) selected` : 'Select modules for this course' }}
                                 </div>
                                 <div class="pr-2">
-                                    <Button variant="ghost" type="button" class="h-8 px-2 hover:bg-muted">
+                                    <Button variant="ghost" type="button" class="hover:bg-muted h-8 px-2">
                                         <Plus class="h-5 w-5" />
                                     </Button>
                                 </div>
                             </div>
-                            
+
                             <!-- Dropdown for module selection -->
-                            <div v-if="showDropdown" 
-                                class="absolute z-10 mt-1 w-full bg-popover border border-border rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out"
-                                style="max-height: 300px;">
-                                <div class="sticky top-0 p-2 bg-popover border-b border-border">
+                            <div
+                                v-if="showDropdown"
+                                class="bg-popover border-border absolute z-10 mt-1 w-full overflow-hidden rounded-lg border shadow-lg transition-all duration-200 ease-in-out"
+                                style="max-height: 300px"
+                            >
+                                <div class="bg-popover border-border sticky top-0 border-b p-2">
                                     <div class="relative">
-                                        <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                        <input 
+                                        <Search class="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+                                        <input
                                             ref="searchInput"
-                                            v-model="searchTerm" 
-                                            type="text" 
-                                            placeholder="Search modules..." 
-                                            class="w-full py-2 pl-9 pr-3 rounded-md border border-input bg-background text-sm" 
+                                            v-model="searchTerm"
+                                            type="text"
+                                            placeholder="Search modules..."
+                                            class="border-input bg-background w-full rounded-md border py-2 pr-3 pl-9 text-sm"
                                             @blur="showDropdown = false"
                                         />
                                     </div>
                                 </div>
-                                
-                                <div class="overflow-y-auto max-h-[250px]">
-                                    <div v-if="availableModules.length === 0" class="p-3 text-sm text-center text-muted-foreground">
+
+                                <div class="max-h-[250px] overflow-y-auto">
+                                    <div v-if="availableModules.length === 0" class="text-muted-foreground p-3 text-center text-sm">
                                         No modules available
                                     </div>
-                                    <div 
-                                        v-for="module in availableModules" 
+                                    <div
+                                        v-for="module in availableModules"
                                         :key="module.id"
-                                        class="p-2 hover:bg-accent cursor-pointer transition-colors duration-150 ease-in-out flex items-center"
+                                        class="hover:bg-accent flex cursor-pointer items-center p-2 transition-colors duration-150 ease-in-out"
                                         @click="addModule(module.id)"
                                     >
                                         <span class="ml-2">{{ module.title }}</span>
@@ -231,48 +234,57 @@ const handleSubmit = () => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Selected modules list with drag and drop -->
-                        <transition-group 
-                            name="module-list" 
-                            tag="div" 
-                            class="mt-3 space-y-2"
-                        >
-                            <div v-for="(moduleId, index) in selectedModules" :key="moduleId" 
-                                class="module-item flex items-center justify-between p-3 bg-muted border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 ease-in-out"
+                        <transition-group name="module-list" tag="div" class="mt-3 space-y-2">
+                            <div
+                                v-for="(moduleId, index) in selectedModules"
+                                :key="moduleId"
+                                class="module-item bg-muted border-border flex items-center justify-between rounded-lg border p-3 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md"
                                 draggable="true"
                                 @dragstart="handleDragStart(index, $event)"
                                 @dragover.prevent="handleDragOver(index, $event)"
                                 @dragend="handleDragEnd($event)"
-                                @drop="handleDrop(index, $event)">
-                                <div class="flex items-center flex-grow">
-                                    <div class="mr-2 cursor-move text-muted-foreground hover:text-foreground"
+                                @drop="handleDrop(index, $event)"
+                            >
+                                <div class="flex flex-grow items-center">
+                                    <div
+                                        class="text-muted-foreground hover:text-foreground mr-2 cursor-move"
                                         @mousedown="($event.target as HTMLElement).closest('.module-item')?.setAttribute('draggable', 'true')"
-                                        @mouseup="($event.target as HTMLElement).closest('.module-item')?.setAttribute('draggable', 'false')">
+                                        @mouseup="($event.target as HTMLElement).closest('.module-item')?.setAttribute('draggable', 'false')"
+                                    >
                                         <GripVertical class="h-4 w-4" />
                                     </div>
-                                    <BookOpen class="h-4 w-4 mr-3 text-foreground-light" />
+                                    <BookOpen class="text-foreground-light mr-3 h-4 w-4" />
                                     <span class="text-sm font-medium">
-                                        {{ props.modules.find(m => m.id === moduleId)?.title || moduleId }}
+                                        {{ props.modules.find((m) => m.id === moduleId)?.title || moduleId }}
                                     </span>
                                 </div>
-                                <Button type="button" variant="ghost" size="sm" @click="removeModule(index)" 
-                                    class="h-7 w-7 p-0 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors duration-150">
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    @click="removeModule(index)"
+                                    class="hover:bg-destructive/10 hover:text-destructive h-7 w-7 rounded-full p-0 transition-colors duration-150"
+                                >
                                     <X class="h-4 w-4" />
                                 </Button>
                             </div>
                         </transition-group>
-                        
+
                         <!-- Empty state with drag and drop instruction -->
-                        <div v-if="selectedModules.length === 0" class="mt-2 p-3 border border-dashed border-border rounded-lg text-sm text-center text-muted-foreground">
+                        <div
+                            v-if="selectedModules.length === 0"
+                            class="border-border text-muted-foreground mt-2 rounded-lg border border-dashed p-3 text-center text-sm"
+                        >
                             No modules selected. Add one or more modules to this course.
                         </div>
-                        <div v-else-if="selectedModules.length > 1" class="mt-1 text-xs text-muted-foreground flex items-center">
-                            <GripVertical class="h-3 w-3 mr-1" />
+                        <div v-else-if="selectedModules.length > 1" class="text-muted-foreground mt-1 flex items-center text-xs">
+                            <GripVertical class="mr-1 h-3 w-3" />
                             <span>Drag modules to reorder</span>
                         </div>
                     </div>
-                    
+
                     <div class="pt-3">
                         <Button type="submit" class="button inline-flex items-center gap-2">
                             <Save class="h-5 w-5" />
@@ -288,26 +300,28 @@ const handleSubmit = () => {
 <style scoped>
 .module-list-enter-active,
 .module-list-leave-active {
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 .module-list-enter-from,
 .module-list-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
+    opacity: 0;
+    transform: translateY(10px);
 }
 
 .module-item {
-  transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .module-item.dragging {
-  opacity: 0.5;
-  background-color: var(--color-accent);
-  transform: scale(1.02);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    opacity: 0.5;
+    background-color: var(--color-accent);
+    transform: scale(1.02);
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .module-item.drag-over {
-  border-top: 2px solid var(--color-primary);
+    border-top: 2px solid var(--color-primary);
 }
 </style>

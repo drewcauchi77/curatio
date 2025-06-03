@@ -1,9 +1,9 @@
-import { createApp, h, watch } from 'vue';
-import type { DefineComponent } from 'vue';
-import { createInertiaApp } from '@inertiajs/vue3';
-import type { ImportMetaData } from '@/definitions/types';
 import MainLayout from '@/components/layouts/MainLayout.vue';
+import type { ImportMetaData } from '@/definitions/types';
+import { createInertiaApp } from '@inertiajs/vue3';
 import { createPinia } from 'pinia';
+import type { DefineComponent } from 'vue';
+import { createApp, h, watch } from 'vue';
 import i18n from './plugins/i18n';
 import { useStatusStore } from './store/status.store';
 
@@ -26,15 +26,16 @@ createInertiaApp({
             .use(plugin)
             .use(pinia)
             .use(i18n)
-            .mount(el)
+            .mount(el);
 
         const statusStore = useStatusStore();
-        
-        watch(() => statusStore.isBodyScrollable,
-            scrollable => {
+
+        watch(
+            () => statusStore.isBodyScrollable,
+            (scrollable) => {
                 document.body.style.overflow = !scrollable ? '' : 'hidden';
             },
-            { immediate: true }
+            { immediate: true },
         );
     },
-})
+});

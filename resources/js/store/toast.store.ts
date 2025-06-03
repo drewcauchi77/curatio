@@ -1,6 +1,6 @@
+import { Toast } from '@/definitions/interfaces';
 import { defineStore } from 'pinia';
 import { reactive } from 'vue';
-import { Toast } from '@/definitions/interfaces';
 
 export const useToastStore = defineStore('toast', () => {
     const toasts = reactive([] as Toast[]);
@@ -10,17 +10,17 @@ export const useToastStore = defineStore('toast', () => {
         this.toasts.push({ id, ...payload });
 
         setTimeout(() => {
-            this.removeToast(id)
-        }, payload.duration)
+            this.removeToast(id);
+        }, payload.duration);
     }
 
     function removeToast(id: string) {
-        this.toasts = this.toasts.filter(t => t.id !== id)
+        this.toasts = this.toasts.filter((t) => t.id !== id);
     }
 
     return {
         toasts,
         pushToast,
-        removeToast
+        removeToast,
     };
 });

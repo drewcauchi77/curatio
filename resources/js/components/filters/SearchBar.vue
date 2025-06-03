@@ -8,12 +8,14 @@ const model = defineModel();
 
 <template>
     <div class="relative flex-grow">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search class="h-4 w-4 text-muted-foreground" />
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <Search class="text-muted-foreground h-4 w-4" />
         </div>
-        <input class="w-full pl-10 pr-4 py-2 h-10 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+        <input
+            class="bg-background border-input focus:ring-primary focus:border-primary h-10 w-full rounded-md border py-2 pr-4 pl-10 text-sm focus:ring-2 focus:outline-none"
             v-model="model"
-            type="text" 
-            :placeholder="placeholder" />
+            type="text"
+            :placeholder="placeholder"
+        />
     </div>
 </template>

@@ -1,4 +1,4 @@
-import { Method, ModuleAvailableModals, StatusSlug, ToastType } from "./types";
+import { Method, ModuleAvailableModals, StatusSlug, ToastType } from './types';
 
 export interface PaginationResponse {
     current_page: number;
@@ -13,32 +13,33 @@ export interface PaginationResponse {
     prev_page_url: number | null;
     to: number;
     total: number;
-};
+}
 
 export interface FlashResponse {
     message: string;
-    success: boolean;
-};
+    title: string;
+    type: ToastType;
+}
 
 export interface FilterProps {
     q?: string;
     order?: string;
     orderBy?: string;
     status?: string;
-};
+}
 
 export interface CountProps {
     draft: number;
     published: number;
     deleted: number;
     all: number;
-};
+}
 
 export interface StatusProps {
     label: string;
     value: string;
     count: number;
-};
+}
 
 export interface Course {
     id: string;
@@ -53,7 +54,7 @@ export interface InputFieldProps {
     labelName: string;
     inputType: string;
     placeholder: string;
-};
+}
 
 export interface SidebarProps {
     href: string;
@@ -62,16 +63,16 @@ export interface SidebarProps {
     method?: Method;
     as?: string;
     isDestructive?: boolean;
-};
+}
 
 export interface PageHeaderProps {
     backLink: string;
     title: string;
-};
+}
 
 export interface SearchBarProps {
     placeholder: string;
-};
+}
 
 export interface StatusBarProps {
     statuses: StatusProps[];
@@ -83,23 +84,23 @@ export interface CreateItemProps {
     subtitle: string;
     buttonLink: string;
     buttonText: string;
-};
+}
 
 export interface EmptyDataProps {
     title: string;
-};
+}
 
 export interface TableHeaderProps {
     headings: string[];
     sizes: number[];
-};
+}
 
 export interface TableRowProps {
     items: string[];
     link: string;
     viewTitle: string;
     sizes: number[];
-};
+}
 
 /**
  * sidebar/PublishMenu.vue
@@ -109,7 +110,7 @@ export interface PublishMenuProps {
     statusId: number;
     createNew: boolean;
     isDisabled: boolean;
-};
+}
 
 /**
  * Toast Definitions
@@ -118,9 +119,9 @@ export interface Toast {
     id: string;
     type: ToastType;
     title: string;
-    description?: string;
+    message?: string;
     duration: number;
-};
+}
 
 /**
  * Module Definitions
@@ -134,11 +135,11 @@ export interface Module {
     updated_at: string;
     status_slug: StatusSlug;
     status_id: number;
-};
+}
 
 export interface ModulePaginationResponse extends PaginationResponse {
     data: Module[];
-};
+}
 
 export interface ModulesIndexProps {
     modules: ModulePaginationResponse;
@@ -147,17 +148,17 @@ export interface ModulesIndexProps {
     modal?: ModuleAvailableModals;
     connection?: YoutubeConnectionProps;
     flash: FlashResponse;
-};
+}
 
 export interface ModulesShowProps {
     module: Module;
     flash?: FlashResponse | undefined;
-};
+}
 
 export interface ModulesCreateProps {
     module?: Module;
     flash?: FlashResponse | undefined;
-};
+}
 
 /**
  * Youtube Connection Definitions
@@ -165,18 +166,18 @@ export interface ModulesCreateProps {
 export interface YoutubeConnectionProps {
     authUrl: string | null;
     connected: boolean;
-};
+}
 
 export interface VideoGenerateProps {
     title: string;
     connection: YoutubeConnectionProps;
-};
+}
 
 /**
  * Course Definitions
  */
 export interface CoursePaginationResponse extends PaginationResponse {
-    data: Course[]
+    data: Course[];
 }
 
 export interface CoursesIndexProps extends FilterProps {

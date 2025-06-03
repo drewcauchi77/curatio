@@ -17,3 +17,7 @@ Installed PHPStan with level 7 and ran it across the codebase - some errors show
 ### 02/06/2025
 
 Didn't have much time today but still made some small progress. I started fixing some of the PHPStan errors and integrated the YouTube OAuth functionality into one component and one function. Over the next few days, I plan to extract the YouTube and Courses logic into dedicated services to better integrate them with the rest of the project. I also ran into a strange issue with route splitting - when using `require __DIR__` with a path, Inertia routes stopped working. For now, I reverted everything back to a single routes file. Interestingly, after checking some well-known Laravel + Inertia repositories on GitHub, most of them also keep their routes in a single file.
+
+### 03/06/2025
+
+Split the `YoutubeController` into two services: `YoutubeAuthService` and `YoutubeConnectionHandler`, which brings proper separation of concerns which was a solid improvement. I still need to add function annotations. On the frontend, I fixed some toast and flash message logic and resolved an issue where users navigating to a non-existent page would now be redirected to the first page with a flash message. Next, I want to improve error handling by passing error messages via flash, handling them properly in the frontend and adding validation using Vuelidate. I also installed Prettier and integrated the PHPStan command into the GitHub Workflows for continuous static analysis.

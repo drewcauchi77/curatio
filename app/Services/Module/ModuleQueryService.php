@@ -4,6 +4,7 @@ namespace App\Services\Module;
 
 use App\DTO\Module\ModuleFilterData;
 use App\Repositories\ModuleRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Service for querying and retrieving module data.
@@ -60,5 +61,13 @@ class ModuleQueryService
         ]);
 
         return $data;
+    }
+
+    public function shouldRedirectToFirstPage(ModuleFilterData $filterData, LengthAwarePaginator $paginator): bool
+    {
+        $requestedPage = $filterData->page ?? 1;
+        $lastPage = $paginator->lastPage();
+
+        return $requestedPage > $lastPage && $lastPage > 0;
     }
 }

@@ -33,7 +33,8 @@
     "success": {
         "success": "Success",
         "module": {
-            "create-success": "Module has been created successfully!"
+            "create-success": "Module has been created successfully!",
+            "update-success": "Module has been updated successfully!"
         }
     },
     "input": {

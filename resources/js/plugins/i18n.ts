@@ -19,6 +19,6 @@ export default {
             let translation = getNestedTranslation(en, key);
             if (!translation || typeof translation !== 'string') return key;
             return replacePlaceholders(translation, replacements);
-        }
-    }
-}
+        };
+    },
+};

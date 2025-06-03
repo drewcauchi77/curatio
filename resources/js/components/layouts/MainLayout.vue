@@ -14,11 +14,9 @@ onMounted(() => {
 <template>
     <main class="flex h-screen overflow-hidden">
         <SidebarMenu />
-        <section 
-            class="flex-grow px-2 mt-4 sm:px-5 overflow-y-auto transition-all duration-300"
-            :class="[
-                statusStore.isMobile ? 'ml-16' : (statusStore.isMenuCollapsed ? 'ml-16' : 'ml-64')
-            ]"
+        <section
+            class="mt-4 flex-grow overflow-y-auto px-2 transition-all duration-300 sm:px-5"
+            :class="[statusStore.isMobile ? 'ml-16' : statusStore.isMenuCollapsed ? 'ml-16' : 'ml-64']"
         >
             <slot />
         </section>

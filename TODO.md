@@ -1,24 +1,25 @@
--   Error handling VueJS with Toast
--   Trash to remove all
--   Hard delete for modules
--   Mail setup
--   MySQL
--   External API for modules/courses
--   Frontend for the end-users
--   Storage for uploads
--   Cronjob to feed Youtube Videos
--   Types for Reactive and Ref
--   TODO sections
--   Attach video, description text area
--   Cache Redis
+- Trash to remove all
+- Hard delete for modules
+- Mail setup
+- MySQL
+- External API for modules/courses
+- Frontend for the end-users
+- Storage for uploads
+- Cronjob to feed Youtube Videos
+- Types for Reactive and Ref
+- TODO sections
+- Attach video, description text area
+- Cache Redis
 
--   Better segregation of code structure is missing
--   Connection with youtube to feed off videos
--   Cleaner routes + cleaner code
--   Environments need to be setup
+- Better segregation of code structure is missing
+- Connection with youtube to feed off videos
+- Cleaner routes + cleaner code
+- Environments need to be setup
 
--   Refactoring
+- Refactoring
     - Resources
     - Bunch of TODOs
     - Annotations of functions + Models
     - Care about n+1
+- Passing error handling from Laravel to Vue
+- Vuelidate

@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, getCurrentInstance } from "vue";
-import { Link, router } from "@inertiajs/vue3";
-import PageHeader from "@/components/global/PageHeader.vue";
-import CreateItem from "@/components/sections/CreateItem.vue";
-import SearchBar from "@/components/filters/SearchBar.vue";
-import SortBar from "@/components/filters/SortBar.vue";
-import StatusBar from "@/components/filters/StatusBar.vue";
-import EmptyData from "@/components/sections/EmptyData.vue";
-import TableContainer from "@/components/containers/TableContainer.vue";
-import TableHead from "@/components/tables/TableHead.vue";
-import TableRow from "@/components/tables/TableRow.vue";
-import VideoGenerate from "@/components/modals/VideoGenerate.vue";
-import { Button } from "@/components/ui/button";
+import { ref, watch } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
+import PageHeader from '@/components/global/PageHeader.vue';
+import CreateItem from '@/components/sections/CreateItem.vue';
+import SearchBar from '@/components/filters/SearchBar.vue';
+import SortBar from '@/components/filters/SortBar.vue';
+import StatusBar from '@/components/filters/StatusBar.vue';
+import EmptyData from '@/components/sections/EmptyData.vue';
+import TableContainer from '@/components/containers/TableContainer.vue';
+import TableHead from '@/components/tables/TableHead.vue';
+import TableRow from '@/components/tables/TableRow.vue';
+import VideoGenerate from '@/components/modals/VideoGenerate.vue';
+import { Button } from '@/components/ui/button';
 import { Play, PlusCircle } from 'lucide-vue-next';
-import { useToastStore } from "@/store/toast.store";
-import { capitalizeFirstLetter, debounce } from "@/helpers/helpers";
-import { ModulesIndexProps } from "@/definitions/interfaces";
-import Pagination from "@/components/global/Pagination.vue";
+import { capitalizeFirstLetter, debounce } from '@/helpers/helpers';
+import { ModulesIndexProps } from '@/definitions/interfaces';
+import Pagination from '@/components/global/Pagination.vue';
+import { useFlashMessages } from '@/composables/useFlashMessages';
 
 const props = defineProps<ModulesIndexProps>();
 
@@ -27,30 +27,20 @@ const currentPage = ref(props.modules.current_page);
 
 const withModal = ref(props.modal);
 
-const toastStore = useToastStore();
-const { proxy } = getCurrentInstance()!;
-
-onMounted(() => {
-    if (!props.flash.success) {
-        toastStore.pushToast({
-            type: 'error',
-            title: proxy.$t('errors.pagination.not-available.title'),
-            description: proxy.$t('errors.pagination.not-available.description'),
-            duration: 4000,
-        });
-    }
-});
+useFlashMessages(props.flash, 4000);
 
 const getFilteredModules = (): void => {
     const params = {
         ...(searchTerm.value ? { q: searchTerm.value } : {}),
-        ...(order.value ? { 
-            orderBy: order.value.split('|')[0],
-            order: order.value.split('|')[1]
-        } : {}),
+        ...(order.value
+            ? {
+                  orderBy: order.value.split('|')[0],
+                  order: order.value.split('|')[1],
+              }
+            : {}),
         ...(status.value ? { status: status.value } : {}),
-        ...(currentPage.value ? { page: currentPage.value } : {})
-    }
+        ...(currentPage.value ? { page: currentPage.value } : {}),
+    };
 
     router.get('/modules', params, { preserveState: true, replace: true });
 };
@@ -62,7 +52,7 @@ watch(status, getFilteredModules);
 
 <template>
     <div class="space-y-6">
-        <PageHeader :back-link="'/dashboard'" :title="$t('modules.title')" >
+        <PageHeader :back-link="'/dashboard'" :title="$t('modules.title')">
             <Button as-child class="bg-[#ff0033] hover:bg-red-600">
                 <Link href="/modules/generate" class="inline-flex items-center gap-2">
                     <Play class="h-4 w-4" />
@@ -78,48 +68,52 @@ watch(status, getFilteredModules);
             </Button>
         </PageHeader>
 
-        <div class="container px-2 sm:px-4 mx-auto">
-            <CreateItem v-if="(!modules || !modules.data || modules.data.length === 0) && searchTerm === ''"
-                :title="$t('modules.no-modules')" 
-                :subtitle="$t('modules.create-module')" 
-                :button-link="'/modules/create'" 
-                :button-text="$t('modules.create-title')" />
+        <div class="container mx-auto px-2 sm:px-4">
+            <CreateItem
+                v-if="(!modules || !modules.data || modules.data.length === 0) && searchTerm === ''"
+                :title="$t('modules.no-modules')"
+                :subtitle="$t('modules.create-module')"
+                :button-link="'/modules/create'"
+                :button-text="$t('modules.create-title')"
+            />
 
             <div v-else class="w-full">
-                <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                <div class="mb-4 flex flex-col gap-4 sm:flex-row">
                     <SearchBar v-model="searchTerm" :placeholder="$t('modules.placeholders.search')" />
                     <SortBar v-model="order" />
                 </div>
-                
-                <StatusBar :current-status="status"
+
+                <StatusBar
+                    :current-status="status"
                     :statuses="[
                         { label: 'All', value: 'all', count: counts.all },
                         { label: 'Published', value: 'published', count: counts.published },
                         { label: 'Drafts', value: 'draft', count: counts.draft },
-                        { label: 'Trash', value: 'deleted', count: counts.deleted }
-                    ]" @status="(s) => status = s" />
+                        { label: 'Trash', value: 'deleted', count: counts.deleted },
+                    ]"
+                    @status="(s) => (status = s)"
+                />
 
                 <TableContainer>
                     <template v-slot:head>
-                        <TableHead :headings="[
-                            $t('modules.title'),
-                            $t('modules.description'),
-                            $t('general.status'),
-                            $t('general.actions')
-                        ]" :sizes="[3, 5, 3, 1]" />
+                        <TableHead
+                            :headings="[$t('modules.title'), $t('modules.description'), $t('general.status'), $t('general.actions')]"
+                            :sizes="[3, 5, 3, 1]"
+                        />
                     </template>
                     <template v-slot:body>
                         <EmptyData v-if="modules.data.length === 0" :title="$t('modules.not-found-modules')" />
-                        <TableRow v-else v-for="(module, index) in modules.data" :key="module.id" :class="{'bg-muted/50': index % 2 == 1}"
+                        <TableRow
+                            v-else
+                            v-for="(module, index) in modules.data"
+                            :key="module.id"
+                            :class="{ 'bg-muted/50': index % 2 == 1 }"
                             :title="module.title"
-                            :items="[
-                                module.title,
-                                module.description,
-                                capitalizeFirstLetter(module.status_slug),
-                            ]"
+                            :items="[module.title, module.description, capitalizeFirstLetter(module.status_slug)]"
                             :sizes="[3, 5, 3, 1]"
                             :link="`/modules/${module.id}`"
-                            :view-title="$t('general.view')" />
+                            :view-title="$t('general.view')"
+                        />
                     </template>
                 </TableContainer>
 

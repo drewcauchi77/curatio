@@ -43,10 +43,9 @@ class ModuleController extends Controller
         $filterData = ModuleFilterData::fromRequest($request);
         $result = $this->queryService->getFilteredModules($filterData);
 
-        // TODO: Redirect to first page on error
-        // if ($this->shouldRedirectToFirstPage($request, $result['paginator'])) {
-        //     return $this->redirectToFirstPage($request);
-        // }
+        if ($result['modules']->currentPage() > $result['modules']->lastPage() && $result['modules']->lastPage() > 0) {
+            return $this->redirectToFirstPage($request);
+        }
 
         return Inertia::render('modules/Modules', $result);
     }
@@ -76,7 +75,8 @@ class ModuleController extends Controller
 
         return redirect()->route('modules.show', ['module' => $module])
             ->with([
-                'success' => true,
+                'type' => 'success',
+                'title' => 'success.success',
                 'message' => 'success.module.create-success',
             ]);
     }
@@ -112,8 +112,21 @@ class ModuleController extends Controller
         return redirect()
             ->route('modules.show', ['module' => $module])
             ->with([
-                'success' => true,
-                'message' => 'module.update-success',
+                'type' => 'success',
+                'title' => 'success.success',
+                'message' => 'success.module.update-success',
+            ]);
+    }
+
+    private function redirectToFirstPage(IndexModuleRequest $request): RedirectResponse
+    {
+        $params = $request->except('page');
+
+        return redirect()->route('modules.index', $params)
+            ->with([
+                'type' => 'error',
+                'title' => 'errors.pagination.not-available.title',
+                'message' => 'errors.pagination.not-available.description'
             ]);
     }
 }

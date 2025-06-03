@@ -6,6 +6,8 @@ use App\DTO\Module\ModuleFilterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
 use App\Services\Module\ModuleQueryService;
+use App\Services\Youtube\YoutubeAuthService;
+use App\Services\Youtube\YoutubeConnectionHandler;
 use App\Services\YoutubeService;
 use Exception;
 use Google\Client;
@@ -23,7 +25,9 @@ class YoutubeController extends Controller
      */
     function __construct(
         private readonly YoutubeService $youtubeService,
-        private readonly ModuleQueryService $queryService
+        private readonly ModuleQueryService $queryService,
+        private readonly YoutubeAuthService $authService,
+        private readonly YoutubeConnectionHandler $connectionHandler
     ) {}
 
     /**
@@ -35,72 +39,22 @@ class YoutubeController extends Controller
      */
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
+        if ($redirect = $this->connectionHandler->handleRequest($request)) {
+            return $redirect;
+        }
+
         $filterData = ModuleFilterData::fromRequest($request);
         $result = $this->queryService->getFilteredModulesWithModal($filterData, 'VideoGenerateModal');
-
-        $redirectUrl = "https://redirectmeto.com/http://curatio.com/modules/generate?auth=successful";
-        $client = new Client();
-        $client->setAuthConfig(base_path('youtube.json'));
-        $client->setRedirectUri($redirectUrl);
-        $client->addScope('https://www.googleapis.com/auth/youtube');
-        // TODO this is unsafe
-        $httpClient = new GuzzleHttpClient([
-            'verify' => false,
-        ]);
-        $client->setHttpClient($httpClient);
-
-        // Initialize variables
-        $connected = false;
-        $authUrl = null;
-
-        if (!$request->has('code') && !Session::has('google_oauth_token')) {
-            Session::put('code_verifier', $client->getOAuth2Service()->generateCodeVerifier());
-            $authUrl = $client->createAuthUrl();
-            $connected = false;
-        }
-
-        if ($request->has('code')) {
-            $token = $client->fetchAccessTokenWithAuthCode($request->input('code'), Session::get('code_verifier'));
-            $client->setAccessToken($token);
-            Session::put('google_oauth_token', $token);
-            return redirect($redirectUrl);
-        }
-
-        if (Session::has('google_oauth_token')) {
-            $client->setAccessToken(Session::get('google_oauth_token'));
-            if ($client->isAccessTokenExpired()) {
-                Session::forget('google_oauth_token');
-                $connected = false;
-            } else {  // Added else to only set connected=true if token is not expired
-                $connected = true;
-            }
-        }
-
-        if (Session::has('disconnect')) {
-            Session::forget('google_oauth_token');
-            Session::forget('code_verifier');
-            return redirect($redirectUrl);
-        }
-
-        // If connected is true but we don't have authUrl, we need to generate it
-        if (!$connected && !$authUrl) {
-            Session::put('code_verifier', $client->getOAuth2Service()->generateCodeVerifier());
-            $authUrl = $client->createAuthUrl();
-        }
+        $youtubeConnection = $this->authService->getConnectionStatus();
 
         // TODO: Redirect to first page on error
         // if ($this->shouldRedirectToFirstPage($request, $result['paginator'])) {
         //     return $this->redirectToFirstPage($request);
         // }
 
-        $youtube = [
-            'connected' => $connected,
-            'authUrl' => $authUrl
-        ];
+        $data = array_merge($result, ['connection' => $youtubeConnection]);
 
-        $finalaa = array_merge($result, ['connection' => $youtube]);
-
-        return Inertia::render('modules/Modules', $finalaa);
+        return Inertia::render('modules/Modules', $data);
     }
 
     public function store()

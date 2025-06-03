@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { Button } from "@/components/ui/button";
+import { computed } from 'vue';
+import { Button } from '@/components/ui/button';
 import { Save, Eye, FileText, Trash2 } from 'lucide-vue-next';
 import { capitalizeFirstLetter } from '@/helpers/helpers';
-import { PublishMenuProps } from "@/definitions/interfaces";
+import { PublishMenuProps } from '@/definitions/interfaces';
 
-const props = defineProps<PublishMenuProps>()
+const props = defineProps<PublishMenuProps>();
 
-const emit = defineEmits(['handleUpdate'])
+const emit = defineEmits(['handleUpdate']);
 
 const handleSave = (): void => {
     if (props.createNew) {
@@ -28,7 +28,7 @@ const handleMove = (): void => {
 };
 
 const handleUpdate = (statusId: number = props.statusId): void => {
-    emit('handleUpdate', statusId)
+    emit('handleUpdate', statusId);
 };
 
 const saveActionName = computed((): string => {
@@ -38,7 +38,7 @@ const saveActionName = computed((): string => {
         return 'draft';
     } else if (props.status === 'draft') {
         return 'publish';
-    } 
+    }
 });
 
 const deleteActionName = computed((): string => {
@@ -50,22 +50,32 @@ const deleteActionName = computed((): string => {
 </script>
 
 <template>
-    <div class="w-full lg:w-80 px-4 sm:px-6 pb-6 lg:py-6 lg:px-0 lg:pr-8">
+    <div class="w-full px-4 pb-6 sm:px-6 lg:w-80 lg:px-0 lg:py-6 lg:pr-8">
         <div class="space-y-4">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="px-4 py-3 border-b border-gray-200">
-                    <h3 class="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <div class="rounded-lg border border-gray-200 bg-white shadow-sm">
+                <div class="border-b border-gray-200 px-4 py-3">
+                    <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-900">
                         <FileText class="h-4 w-4" />
                         {{ $t('actions.title') }}
                     </h3>
                 </div>
-                <div class="p-4 space-y-4">
-                    <div class="flex flex-col sm:flex-row lg:flex-col gap-2">
-                        <Button @click="handleSave()" v-if="props.status !== 'deleted'" variant="outline" class="flex-1 lg:w-full justify-center gap-2 text-sm cursor-pointer hover:text-black">
+                <div class="space-y-4 p-4">
+                    <div class="flex flex-col gap-2 sm:flex-row lg:flex-col">
+                        <Button
+                            @click="handleSave()"
+                            v-if="props.status !== 'deleted'"
+                            variant="outline"
+                            class="flex-1 cursor-pointer justify-center gap-2 text-sm hover:text-black lg:w-full"
+                        >
                             <FileText class="h-4 w-4" />
                             {{ $t(`actions.${saveActionName}`) }}
                         </Button>
-                        <Button v-if="status !== ''" variant="outline" class="flex-1 lg:w-full justify-center gap-2 text-sm cursor-pointer hover:text-black" disabled="true">
+                        <Button
+                            v-if="status !== ''"
+                            variant="outline"
+                            class="flex-1 cursor-pointer justify-center gap-2 text-sm hover:text-black lg:w-full"
+                            disabled="true"
+                        >
                             <Eye class="h-4 w-4" />
                             {{ $t('actions.preview') }}
                         </Button>
@@ -80,15 +90,20 @@ const deleteActionName = computed((): string => {
                         </div>
                     </div>
 
-                    <div class="pt-2 border-t border-gray-200 mb-1">
-                        <Button v-if="status !== ''" variant="link" @click="handleMove()" class="with-svg cursor-pointer text-red-600 hover:text-red-700 text-sm flex items-center gap-2">
+                    <div class="mb-1 border-t border-gray-200 pt-2">
+                        <Button
+                            v-if="status !== ''"
+                            variant="link"
+                            @click="handleMove()"
+                            class="with-svg flex cursor-pointer items-center gap-2 text-sm text-red-600 hover:text-red-700"
+                        >
                             <Trash2 class="h-4 w-4" />
                             {{ $t(`actions.${deleteActionName}`) }}
                         </Button>
                     </div>
 
                     <div class="pt-2">
-                        <Button class="w-full cursor-pointer inline-flex items-center gap-2" :disabled="isDisabled" @click="handleUpdate()">
+                        <Button class="inline-flex w-full cursor-pointer items-center gap-2" :disabled="isDisabled" @click="handleUpdate()">
                             <Save class="h-4 w-4" />
                             <strong>{{ $t(`actions.update`) }}</strong>
                         </Button>

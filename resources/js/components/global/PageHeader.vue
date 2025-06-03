@@ -7,13 +7,13 @@ defineProps<PageHeaderProps>();
 </script>
 
 <template>
-    <div class="border-b border-border sticky top-0 z-10 bg-background">
-        <div class="container px-4 py-4 mx-auto flex items-center justify-between">
+    <div class="border-border bg-background sticky top-0 z-10 border-b">
+        <div class="container mx-auto flex items-center justify-between px-4 py-4">
             <div class="flex items-center gap-3">
-                <Link :href="backLink" class="text-foreground opacity-80 hover:opacity-100 transition-colors">
+                <Link :href="backLink" class="text-foreground opacity-80 transition-colors hover:opacity-100">
                     <ChevronLeft class="h-5 w-5" />
                 </Link>
-                <h1 class="text-xl font-bold text-foreground">{{ title }}</h1>
+                <h1 class="text-foreground text-xl font-bold">{{ title }}</h1>
             </div>
 
             <div class="flex">

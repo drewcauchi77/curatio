@@ -29,6 +29,6 @@ export const useStatusStore = defineStore('status', () => {
         setIsMenuCollapsed,
         setIsMobile,
         setIsBodyScrollable,
-        checkMobile
+        checkMobile,
     };
 });

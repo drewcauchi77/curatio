@@ -24,12 +24,12 @@
 
     --destructive: #b00020;
     --destructive-foreground: #ffffff;
-    
+
     --border: #e2e8f0;
     --input: #e2e8f0;
     --ring: #6200ee;
 }
-  
+
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -61,4 +61,3 @@
     --color-input: var(--input);
     --color-ring: var(--ring);
 }
-  
