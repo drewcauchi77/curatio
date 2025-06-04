@@ -21,3 +21,7 @@ Didn't have much time today but still made some small progress. I started fixing
 ### 03/06/2025
 
 Split the `YoutubeController` into two services: `YoutubeAuthService` and `YoutubeConnectionHandler`, which brings proper separation of concerns which was a solid improvement. I still need to add function annotations. On the frontend, I fixed some toast and flash message logic and resolved an issue where users navigating to a non-existent page would now be redirected to the first page with a flash message. Next, I want to improve error handling by passing error messages via flash, handling them properly in the frontend and adding validation using Vuelidate. I also installed Prettier and integrated the PHPStan command into the GitHub Workflows for continuous static analysis.
+
+### 04/06/2025
+
+Didn't have much time today but managed to install Laravel Telescope to monitor incoming requests when users navigate the dashboard. It's a great tool for inspecting requests, jobs, queues, and more, and I have limited access to the local environment only. I'm also experimenting with showing flash messages for validation errors and making sure they’re handled correctly by Inertia on the frontend. At the moment, it looks like Inertia's `onError` function only has access to the `errors` property, but not the `flash` property in the response, which might require a different approach for passing flash messages alongside validation feedback.

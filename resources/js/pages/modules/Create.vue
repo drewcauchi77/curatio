@@ -43,6 +43,11 @@ const handleSubmit = (newValue: number): void => {
         moduleForm.post('/modules/create', {
             onFinish: (): boolean => (isLoading.value = false),
             onSuccess: (data: any) => {
+                console.log(data)
+                useToastMessages(data.props.flash, 4000, proxy.$t);
+            },
+            onError: (data: any) => {
+                console.log(data)
                 useToastMessages(data.props.flash, 4000, proxy.$t);
             },
         });

@@ -55,6 +55,12 @@ class StoreModuleRequest extends FormRequest
             );
         }
 
+        $firstError = $validator->errors()->first();
+
+        $this->session()->flash('type', 'error');
+        $this->session()->flash('title', 'error.validation');
+        $this->session()->flash('message', $firstError);
+
         throw (new ValidationException($validator))
             ->errorBag($this->errorBag)
             ->redirectTo($this->getRedirectUrl());
@@ -70,6 +76,8 @@ class StoreModuleRequest extends FormRequest
         return [
             'title.required' => 'The module title is required.',
             'title.max' => 'The module title cannot exceed :max characters.',
+            'description.required' => 'The module description is required.',
+            'description.max' => 'The module description cannot exceed :max characters.',
             'status_id.required' => 'Please select a status for the module.',
             'status_id.exists' => 'The selected status is invalid.',
         ];
