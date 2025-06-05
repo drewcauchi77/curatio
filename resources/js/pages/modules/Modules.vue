@@ -51,6 +51,7 @@ watch(status, getFilteredModules);
 </script>
 
 <template>
+    <MetaTags :title="$t('metatags.modules/Modules')"></MetaTags>
     <div class="space-y-6">
         <PageHeader :back-link="'/dashboard'" :title="$t('modules.title')">
             <Button as-child class="bg-[#ff0033] hover:bg-red-600">

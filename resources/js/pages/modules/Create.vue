@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref, getCurrentInstance } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed } from 'vue';
 import { useForm, InertiaForm } from '@inertiajs/vue3';
-import type { CreateModuleForm } from '@/definitions/types';
+import type { CreateModuleForm, ToastType } from '@/definitions/types';
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/global/InputField.vue';
 import PageHeader from '@/components/global/PageHeader.vue';
 import { Save, Text, BookOpen } from 'lucide-vue-next';
 import { ModulesCreateProps } from '@/definitions/interfaces';
 import PublishMenu from '@/components/sidebar/PublishMenu.vue';
-import { useToastMessages } from '@/helpers/helpers';
+import { errorBagToToastMessages, useToastMessages } from '@/helpers/helpers';
 
 const isEdit = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
@@ -43,12 +43,10 @@ const handleSubmit = (newValue: number): void => {
         moduleForm.post('/modules/create', {
             onFinish: (): boolean => (isLoading.value = false),
             onSuccess: (data: any) => {
-                console.log(data)
                 useToastMessages(data.props.flash, 4000, proxy.$t);
             },
-            onError: (data: any) => {
-                console.log(data)
-                useToastMessages(data.props.flash, 4000, proxy.$t);
+            onError: (errors: any) => {
+                errorBagToToastMessages(errors, 4000, proxy.$t)
             },
         });
     }
@@ -57,9 +55,14 @@ const handleSubmit = (newValue: number): void => {
 const isDataUpdated = (): boolean => {
     return props.module?.title !== moduleForm.title || props.module?.description !== moduleForm.description;
 };
+
+const metaTitle = computed(() => {
+    return isEdit.value && props.module?.id ? proxy.$t('metatags.modules/Show', ['title', props.module?.title]) : proxy.$t('metatags.modules/Create');
+});
 </script>
 
 <template>
+    <MetaTags :title="metaTitle"></MetaTags>
     <div class="min-h-screen">
         <div class="sticky top-0 z-10 bg-white">
             <div class="px-4 sm:px-6 lg:px-8">

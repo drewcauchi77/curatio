@@ -19,11 +19,13 @@ trait HasModuleRules
             'title' => [
                 'required',
                 'string',
+                'min:10',
                 'max:255',
             ],
             'description' => [
                 'required',
                 'string',
+                'min:20',
                 'max:1000',
             ],
             'status_id' => [

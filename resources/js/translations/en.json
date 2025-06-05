@@ -19,10 +19,16 @@
         "update-publish": "Update & Publish"
     },
     "errors": {
+        "error": "Error",
         "company-not-found": "Company has not been found or is not created yet",
         "not-allowed": "You are not allowed to do this action!",
         "internal-server-error": "A technical error has occured. Please contact support.",
-        "validation": "The information you have provided is not correct",
+        "validation": {
+            "required": "The field [field1] is required.",
+            "string": "The field [field1] is not in a valid format.",
+            "max": "The field [field1] should not exceed [field2] characters.",
+            "min": "The field [field1] should be more than [field2] characters."
+        },
         "pagination": {
             "not-available": {
                 "title": "Page does not exist",
@@ -100,5 +106,10 @@
         "actions": {
             "create": "Create Account"
         }
+    },
+    "metatags": {
+        "modules/Create": "Create Module",
+        "modules/Modules": "Modules",
+        "modules/Show": "Module: [title]"
     }
 }

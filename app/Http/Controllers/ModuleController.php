@@ -12,6 +12,7 @@ use App\Http\Requests\Module\StoreModuleRequest;
 use App\Http\Requests\Module\UpdateModuleRequest;
 use App\Models\Module;
 use App\Services\Module\ModuleQueryService;
+use Exception;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;

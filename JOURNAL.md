@@ -25,3 +25,7 @@ Split the `YoutubeController` into two services: `YoutubeAuthService` and `Youtu
 ### 04/06/2025
 
 Didn't have much time today but managed to install Laravel Telescope to monitor incoming requests when users navigate the dashboard. It's a great tool for inspecting requests, jobs, queues, and more, and I have limited access to the local environment only. I'm also experimenting with showing flash messages for validation errors and making sure they’re handled correctly by Inertia on the frontend. At the moment, it looks like Inertia's `onError` function only has access to the `errors` property, but not the `flash` property in the response, which might require a different approach for passing flash messages alongside validation feedback.
+
+### 05/06/2025
+
+Added exception and error handling using Inertia’s `errorBag`. I ran into an issue where error messages passed through the `errorBag` could only be of type `string`, not arrays which was a problem since I wanted to pass more structured data based on specific validation issues. I eventually found a clean way to work around it using formatted strings, which still keeps things readable. I'm happy with the current error handling setup on the Laravel side; the next step is to catch global exceptions and either redirect to a 500 page with an error message or show a toast on the current page. I also explored Inertia’s meta tag handling and added a global `MetaTags` component so we can dynamically set the browser tab title per route.

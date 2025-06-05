@@ -113,6 +113,13 @@ export interface PublishMenuProps {
 }
 
 /**
+ * global/MetaTags.vue
+ */
+export interface MetaTagsProps {
+    title: string;
+}
+
+/**
  * Toast Definitions
  */
 export interface Toast {
