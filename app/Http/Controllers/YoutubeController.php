@@ -9,17 +9,16 @@ use App\Services\Module\ModuleQueryService;
 use App\Services\Youtube\YoutubeAuthService;
 use App\Services\Youtube\YoutubeConnectionHandler;
 use App\Services\YoutubeService;
+use App\Traits\Module\HandlesModulePageRedirect;
 use Exception;
-use Google\Client;
-use GuzzleHttp\Client as GuzzleHttpClient;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
 class YoutubeController extends Controller
 {
+    use HandlesModulePageRedirect;
+
     /**
      * Constructor to define the dependency injection.
      */
@@ -47,10 +46,9 @@ class YoutubeController extends Controller
         $result = $this->queryService->getFilteredModulesWithModal($filterData, 'VideoGenerateModal');
         $youtubeConnection = $this->authService->getConnectionStatus();
 
-        // TODO: Redirect to first page on error
-        // if ($this->shouldRedirectToFirstPage($request, $result['paginator'])) {
-        //     return $this->redirectToFirstPage($request);
-        // }
+        if ($result['modules']->currentPage() > $result['modules']->lastPage() && $result['modules']->lastPage() > 0) {
+            return $this->redirectToFirstPage($request, 'modules.index');
+        }
 
         $data = array_merge($result, ['connection' => $youtubeConnection]);
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Module;
 
-use App\Traits\HasModuleRules;
+use App\Traits\Module\HasModuleValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateModuleRequest extends FormRequest
 {
-    use HasModuleRules;
+    use HasModuleValidation;
 
     /**
      * Check if user is authorized to update the module.

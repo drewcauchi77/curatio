@@ -38,6 +38,9 @@ const handleSubmit = (newValue: number): void => {
             onSuccess: (data: any) => {
                 useToastMessages(data.props.flash, 4000, proxy.$t);
             },
+            onError: (errors: any) => {
+                errorBagToToastMessages(errors, 4000, proxy.$t)
+            },
         });
     } else {
         moduleForm.post('/modules/create', {
@@ -62,8 +65,8 @@ const metaTitle = computed(() => {
 </script>
 
 <template>
-    <MetaTags :title="metaTitle"></MetaTags>
     <div class="min-h-screen">
+        <MetaTags :title="metaTitle"></MetaTags>
         <div class="sticky top-0 z-10 bg-white">
             <div class="px-4 sm:px-6 lg:px-8">
                 <PageHeader :back-link="'/modules'" :title="isEdit ? module?.title : $t('modules.create-title')" class="border-0 bg-transparent p-0">

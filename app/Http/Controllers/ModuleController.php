@@ -12,7 +12,7 @@ use App\Http\Requests\Module\StoreModuleRequest;
 use App\Http\Requests\Module\UpdateModuleRequest;
 use App\Models\Module;
 use App\Services\Module\ModuleQueryService;
-use Exception;
+use App\Traits\Module\HandlesModulePageRedirect;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;
@@ -22,6 +22,8 @@ use Inertia\Response as InertiaResponse;
  */
 class ModuleController extends Controller
 {
+    use HandlesModulePageRedirect;
+
     /**
      * Initialize controller with query service and resource authorization.
      * 
@@ -45,7 +47,7 @@ class ModuleController extends Controller
         $result = $this->queryService->getFilteredModules($filterData);
 
         if ($result['modules']->currentPage() > $result['modules']->lastPage() && $result['modules']->lastPage() > 0) {
-            return $this->redirectToFirstPage($request);
+            return $this->redirectToFirstPage($request, 'modules.index');
         }
 
         return Inertia::render('modules/Modules', $result);
@@ -116,18 +118,6 @@ class ModuleController extends Controller
                 'type' => 'success',
                 'title' => 'success.success',
                 'message' => 'success.module.update-success',
-            ]);
-    }
-
-    private function redirectToFirstPage(IndexModuleRequest $request): RedirectResponse
-    {
-        $params = $request->except('page');
-
-        return redirect()->route('modules.index', $params)
-            ->with([
-                'type' => 'error',
-                'title' => 'errors.pagination.not-available.title',
-                'message' => 'errors.pagination.not-available.description'
             ]);
     }
 }

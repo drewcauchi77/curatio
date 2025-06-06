@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Module;
 
 use App\Models\Module;
-use App\Traits\HasModuleRules;
+use App\Traits\Module\HasModuleValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreModuleRequest extends FormRequest
 {
-    use HasModuleRules;
+    use HasModuleValidation;
 
     /**
      * Check if user is authorized to create modules.
@@ -31,26 +31,5 @@ class StoreModuleRequest extends FormRequest
     public function rules(): array
     {
         return $this->moduleRules();
-    }
-
-    /**
-     * Get custom validation error messages.
-     * 
-     * @return array Custom messages for validation errors
-     */
-    public function messages(): array
-    {
-        return [
-            'title.required' => 'errors.validation.required|title',
-            'title.string' => 'errors.validation.format|title',
-            'title.max' => 'errors.validation.max|title,:max',
-            'title.min' => 'errors.validation.min|title,:min',
-            'description.required' => 'errors.validation.required|description',
-            'description.string' => 'errors.validation.format|description',
-            'description.max' => 'errors.validation.max|description,:max',
-            'description.min' => 'errors.validation.min|description,:min',
-            'status_id.required' => 'errors.validation.required|status',
-            'status_id.integer' => 'errors.validation.format|status',
-        ];
     }
 }

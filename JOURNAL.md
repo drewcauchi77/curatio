@@ -29,3 +29,7 @@ Didn't have much time today but managed to install Laravel Telescope to monitor 
 ### 05/06/2025
 
 Added exception and error handling using Inertia’s `errorBag`. I ran into an issue where error messages passed through the `errorBag` could only be of type `string`, not arrays which was a problem since I wanted to pass more structured data based on specific validation issues. I eventually found a clean way to work around it using formatted strings, which still keeps things readable. I'm happy with the current error handling setup on the Laravel side; the next step is to catch global exceptions and either redirect to a 500 page with an error message or show a toast on the current page. I also explored Inertia’s meta tag handling and added a global `MetaTags` component so we can dynamically set the browser tab title per route.
+
+### 06/06/2025
+
+Short day today: made some minor changes and did a general cleanup including moved some logic into separate traits for better structure. Also ran a few Pest tests to experiment with the setup, which I'll continue working on later. Did a `php artisan migrate:refresh` to ensure everything runs smoothly, and I'm considering creating a factory soon to generate some dummy data for easier testing.

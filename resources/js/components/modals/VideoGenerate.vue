@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { X } from 'lucide-vue-next';
-import { useForm, router } from '@inertiajs/vue3';
+import { useForm, router, Link } from '@inertiajs/vue3';
 import { useStatusStore } from '@/store/status.store';
 import { Button } from '@/components/ui/button';
+import { Share2 } from 'lucide-vue-next';
 import { VideoGenerateProps } from '@/definitions/interfaces';
 
 const statusStore = useStatusStore();
@@ -79,18 +80,19 @@ const handleSubmit = () => {
                 </slot>
             </div>
 
-            <div v-if="connection.connected">
-                <span>Connected</span>
-            </div>
-            <div v-else>
-                <a :href="connection.authUrl">Auth</a>
-            </div>
-
             <!-- Modal footer -->
             <div class="border-border bg-background sticky bottom-0 border-t p-4">
-                <div class="flex justify-end gap-3">
-                    <Button variant="outline" @click="closeModal"> Cancel </Button>
-                    <Button @click="handleSubmit" :disabled="channelForm.processing"> Connect your Youtube Account </Button>
+                <div class="flex justify-end gap-3" v-if="connection.connected">
+                    <span>Already Connected</span>
+                </div>
+                <div class="flex justify-end gap-3" v-else>
+                    <Button variant="outline" @click="closeModal">Cancel</Button>
+                    <Button as-child class="ml-4" :disabled="channelForm.processing">
+                        <a :href="connection.authUrl" class="inline-flex items-center gap-2">
+                            <Share2 class="h-4 w-4" />
+                            <strong class="hidden sm:block">Connect Your Account</strong>
+                        </a>
+                    </Button>
                 </div>
             </div>
         </div>
