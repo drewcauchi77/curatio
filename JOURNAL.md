@@ -33,3 +33,7 @@ Added exception and error handling using Inertia’s `errorBag`. I ran into an i
 ### 06/06/2025
 
 Short day today: made some minor changes and did a general cleanup including moved some logic into separate traits for better structure. Also ran a few Pest tests to experiment with the setup, which I'll continue working on later. Did a `php artisan migrate:refresh` to ensure everything runs smoothly, and I'm considering creating a factory soon to generate some dummy data for easier testing.
+
+### 08/06/2025
+
+Separated the modal component into a dedicated `ModalLayout` file to keep things cleaner. Set up the service logic to fetch channel data, though I still need to review and refactor it to ensure it is reusable. On the frontend, I built the UI to display the channel connection details. The next step is to persist the Google OAuth session ID in the database, since it's currently tied to the Laravel session and gets lost on logout. Storing it will allow us to attach the OAuth on every user login, enabling features like scheduled syncs via cronjob and a manual sync button for users. Learned today that `Session::all()` gives full access to session data, which helped me locate the OAuth session details - pretty interesting discovery. Also installed and configured `ESLint` to help clean up the frontend code and address issues flagged in the GitHub workflow. Got a bunch of warnings to fix over time.

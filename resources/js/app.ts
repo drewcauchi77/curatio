@@ -15,7 +15,7 @@ createInertiaApp({
     },
     resolve: async (name: string): Promise<DefineComponent> => {
         const pages = import.meta.glob('./Pages/**/*.vue') as ImportMetaData;
-        let page = await pages[`./Pages/${name}.vue`]();
+        const page = await pages[`./Pages/${name}.vue`]();
 
         if (page.default.layout === undefined && page.default.hasLayout !== false) {
             page.default.layout = MainLayout;
