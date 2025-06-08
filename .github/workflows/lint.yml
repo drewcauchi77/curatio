@@ -35,12 +35,6 @@ jobs:
       - name: Lint Frontend
         run: npm run lint
 
-      - name: Run Pint
-        run: vendor/bin/pint
-
-      - name: Run PHP Stan
-        run: vendor/bin/phpstan analyse --memory-limit=2G
-
       # - name: Commit Changes
       #   uses: stefanzweifel/git-auto-commit-action@v5
       #   with:

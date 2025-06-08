@@ -71,7 +71,7 @@ const metaTitle = computed(() => {
             <div class="px-4 sm:px-6 lg:px-8">
                 <PageHeader :back-link="'/modules'" :title="isEdit ? module?.title : $t('modules.create-title')" class="border-0 bg-transparent p-0">
                     <div class="flex items-center gap-2 lg:hidden">
-                        <Button :disabled="isLoading" class="inline-flex cursor-pointer items-center gap-2">
+                        <Button :disabled="isLoading" class="inline-flex items-center gap-2">
                             <Save class="h-4 w-4" />
                             <strong>{{ $t(`actions.${isEdit ? 'update' : 'publish'}`) }}</strong>
                         </Button>

@@ -123,5 +123,5 @@ watch(status, getFilteredModules);
         </div>
     </div>
 
-    <VideoGenerate v-if="withModal == 'VideoGenerateModal'" :title="$t('videos.generate-title')" :connection="connection"></VideoGenerate>
+    <VideoGenerate v-if="withModal == 'VideoGenerateModal'" :title="$t('videos.generate-title')" :connection="connection" :channelData="channelData"></VideoGenerate>
 </template>

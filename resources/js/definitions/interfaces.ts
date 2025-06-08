@@ -102,6 +102,20 @@ export interface TableRowProps {
     sizes: number[];
 }
 
+export interface ModalLayoutProps {
+    title: string;
+    backLink: string;
+}
+
+export interface ChannelInfo {
+    id: string;
+    name: string;
+    profilePicture: string;
+    subscriberCount: string;
+    videoCount: string;
+    viewCount: string;
+}
+
 /**
  * sidebar/PublishMenu.vue
  */
@@ -155,6 +169,7 @@ export interface ModulesIndexProps {
     modal?: ModuleAvailableModals;
     connection?: YoutubeConnectionProps;
     flash: FlashResponse;
+    channelData?: ChannelInfo;
 }
 
 export interface ModulesShowProps {
@@ -178,6 +193,7 @@ export interface YoutubeConnectionProps {
 export interface VideoGenerateProps {
     title: string;
     connection: YoutubeConnectionProps;
+    channelData?: ChannelInfo;
 }
 
 /**
@@ -189,4 +205,8 @@ export interface CoursePaginationResponse extends PaginationResponse {
 
 export interface CoursesIndexProps extends FilterProps {
     courses: CoursePaginationResponse;
+}
+
+export interface ChannelInfoProps {
+    channelInfo: ChannelInfo;
 }

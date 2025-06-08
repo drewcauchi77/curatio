@@ -1,11 +1,16 @@
 {
     "general": {
-        "copyright": "© [currentYear] EduCli. All rights reserved.",
+        "copyright": "© [currentYear] Curatio. All rights reserved.",
         "actions": "Actions",
         "view": "View",
         "status": "Status",
         "success": "Success",
         "not-available": "N/A"
+    },
+    "metatags": {
+        "modules/Create": "Create Module",
+        "modules/Modules": "Modules",
+        "modules/Show": "Module: [title]"
     },
     "actions": {
         "title": "Actions",
@@ -16,7 +21,8 @@
         "preview": "Preview",
         "draft": "Send to Draft",
         "publish": "Publish",
-        "update-publish": "Update & Publish"
+        "update-publish": "Update & Publish",
+        "go-back": "Go Back"
     },
     "errors": {
         "error": "Error",
@@ -58,6 +64,20 @@
         "full-name": "Full Name",
         "company": "Company Name"
     },
+    "login": {
+        "sign-in": "Sign in",
+        "have-account": "Don't have an account?",
+        "actions": {
+            "create": "Create an Account"
+        }
+    },
+    "register": {
+        "have-account": "Already have an account?",
+        "sign-in": "Sign in",
+        "actions": {
+            "create": "Create Account"
+        }
+    },
     "modules": {
         "title": "Modules",
         "description": "Description",
@@ -93,23 +113,8 @@
             "search": "Search courses..."
         }
     },
-    "login": {
-        "sign-in": "Sign in",
-        "have-account": "Don't have an account?",
-        "actions": {
-            "create": "Create an Account"
-        }
-    },
-    "register": {
-        "have-account": "Already have an account?",
-        "sign-in": "Sign in",
-        "actions": {
-            "create": "Create Account"
-        }
-    },
-    "metatags": {
-        "modules/Create": "Create Module",
-        "modules/Modules": "Modules",
-        "modules/Show": "Module: [title]"
+    "video-generate": {
+        "title": "Generate Modules",
+        "description": "Connect your YouTube account to automatically generate modules from the videos on your channel.<br><br> We'll fetch your latest videos daily, create corresponding modules and use the video descriptions as content.<br><br> You can disconnect at any time and automatic updates will stop immediately."
     }
 }

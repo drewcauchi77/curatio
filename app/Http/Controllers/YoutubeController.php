@@ -8,10 +8,11 @@ use App\Http\Requests\Module\IndexModuleRequest;
 use App\Services\Module\ModuleQueryService;
 use App\Services\Youtube\YoutubeAuthService;
 use App\Services\Youtube\YoutubeConnectionHandler;
-use App\Services\YoutubeService;
+use App\Services\Youtube\YoutubeDataService;
 use App\Traits\Module\HandlesModulePageRedirect;
-use Exception;
+use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -23,8 +24,8 @@ class YoutubeController extends Controller
      * Constructor to define the dependency injection.
      */
     function __construct(
-        private readonly YoutubeService $youtubeService,
         private readonly ModuleQueryService $queryService,
+        private readonly YoutubeDataService $dataService,
         private readonly YoutubeAuthService $authService,
         private readonly YoutubeConnectionHandler $connectionHandler
     ) {}
@@ -52,16 +53,15 @@ class YoutubeController extends Controller
 
         $data = array_merge($result, ['connection' => $youtubeConnection]);
 
-        return Inertia::render('modules/Modules', $data);
-    }
-
-    public function store()
-    {
-        try {
-            $result = $this->youtubeService->getChannel();
-            dd($result->items);
-        } catch (Exception $e) {
-            dd($e);
+        if (Session::has('google_oauth_token')) {
+            $channelData = $this->dataService->getChannelData();
+            if ($channelData) {
+                $data['channelData'] = $channelData;
+                // Optionally store channel data in session for future use
+                session(['youtube_channel_data' => $channelData]);
+            }
         }
+
+        return Inertia::render('modules/Modules', $data);
     }
 }
