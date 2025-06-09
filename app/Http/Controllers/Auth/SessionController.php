@@ -33,7 +33,7 @@ class SessionController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return Inertia::render('Dashboard');
+            return Inertia::render('DashboardPage');
         }
 
         return back()->withErrors([

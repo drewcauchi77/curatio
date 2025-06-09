@@ -20,7 +20,7 @@ class CourseController extends Controller
 
         $courses = Course::with('status')
             ->where('company_id', Auth::user()->company_id)
-            ->whereIn('status_id', [1, 2]) // Draft - 1, Published - 2
+            ->whereIn('status_id', [1, 2])
             ->when($search, fn($query) => $query->where('title', 'LIKE', "%{$search}%"))
             ->when(in_array($order, ['asc', 'desc']), function ($query) use ($orderBy, $order) {
                 if ($orderBy === 'title') {
