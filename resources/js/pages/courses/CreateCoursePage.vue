@@ -109,7 +109,7 @@ const handleDragOver = (index: number, event: DragEvent) => {
     });
 };
 
-const handleDragEnd = (event: DragEvent) => {
+const handleDragEnd = () => {
     isDragging.value = false;
     draggedItem.value = null;
     dragOverItem.value = null;
@@ -142,7 +142,7 @@ const handleDrop = (index: number, event: DragEvent) => {
     courseForm.moduleIds = selectedModules.value;
 
     // Clean up
-    handleDragEnd(event);
+    handleDragEnd();
 };
 
 const courseForm = useForm({
@@ -151,17 +151,13 @@ const courseForm = useForm({
 });
 
 const handleSubmit = () => {
-    courseForm.post(`/courses/create`, {
-        onSuccess: (data: any): void => {
-            console.log('onSuccess', data);
-        },
-    });
+    courseForm.post(`/courses/create`);
 };
 </script>
 
 <template>
     <div class="space-y-6">
-        <PageHeader back-link="/courses" :title="'Create Course Page'" :has-button="true" :button-title="'Save'">
+        <PageHeader back-link="/courses" :title="'Create Course Page'" has-button :button-title="'Save'">
             <Save class="h-4 w-4" />
         </PageHeader>
 
@@ -169,11 +165,11 @@ const handleSubmit = () => {
             <div class="bg-card border-border rounded-lg border p-6">
                 <form class="space-y-5" @submit.prevent="handleSubmit()">
                     <InputField
+                        v-model="courseForm.title"
                         input-name="title"
                         label-name="Course Title"
                         input-type="text"
                         :placeholder="$t('courses.placeholders.course-title')"
-                        v-model="courseForm.title"
                     >
                         <BookOpen class="h-5" />
                     </InputField>
@@ -199,11 +195,9 @@ const handleSubmit = () => {
                                 </div>
                             </div>
 
-                            <!-- Dropdown for module selection -->
                             <div
                                 v-if="showDropdown"
-                                class="bg-popover border-border absolute z-10 mt-1 w-full overflow-hidden rounded-lg border shadow-lg transition-all duration-200 ease-in-out"
-                                style="max-height: 300px"
+                                class="bg-popover border-border absolute z-10 mt-1 max-h-[300px] w-full overflow-hidden rounded-lg border shadow-lg transition-all duration-200 ease-in-out"
                             >
                                 <div class="bg-popover border-border sticky top-0 border-b p-2">
                                     <div class="relative">
@@ -244,7 +238,7 @@ const handleSubmit = () => {
                                 draggable="true"
                                 @dragstart="handleDragStart(index, $event)"
                                 @dragover.prevent="handleDragOver(index, $event)"
-                                @dragend="handleDragEnd($event)"
+                                @dragend="handleDragEnd()"
                                 @drop="handleDrop(index, $event)"
                             >
                                 <div class="flex flex-grow items-center">
@@ -264,8 +258,8 @@ const handleSubmit = () => {
                                     type="button"
                                     variant="ghost"
                                     size="sm"
-                                    @click="removeModule(index)"
                                     class="hover:bg-destructive/10 hover:text-destructive h-7 w-7 rounded-full p-0 transition-colors duration-150"
+                                    @click="removeModule(index)"
                                 >
                                     <X class="h-4 w-4" />
                                 </Button>

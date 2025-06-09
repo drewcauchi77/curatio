@@ -115,6 +115,10 @@
     },
     "video-generate": {
         "title": "Generate Modules",
-        "description": "Connect your YouTube account to automatically generate modules from the videos on your channel.<br><br> We'll fetch your latest videos daily, create corresponding modules and use the video descriptions as content.<br><br> You can disconnect at any time and automatic updates will stop immediately."
+        "description": {
+            "line1": "Connect your YouTube account to automatically generate modules from the videos on your channel.",
+            "line2": "We'll fetch your latest videos daily, create corresponding modules and use the video descriptions as content.",
+            "line3": "You can disconnect at any time and automatic updates will stop immediately."
+        }
     }
 }

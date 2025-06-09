@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { InputFieldProps } from '@/definitions/interfaces';
 
-const model = defineModel();
-
 defineProps<InputFieldProps>();
+const model = defineModel<string>();
 </script>
 
 <template>
@@ -15,7 +14,7 @@ defineProps<InputFieldProps>();
                 <slot></slot>
             </div>
 
-            <input :id="inputName" :type="inputType" :placeholder="placeholder" class="input" v-model="model" />
+            <input :id="inputName" v-model="model" :type="inputType" :placeholder="placeholder" class="input" />
         </div>
     </div>
 </template>

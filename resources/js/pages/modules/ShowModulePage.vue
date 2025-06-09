@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Create from './Create.vue';
+import CreateModulePage from './CreateModulePage.vue';
 import { ModulesShowProps } from '@/definitions/interfaces';
 
 defineProps<ModulesShowProps>();
 </script>
 
 <template>
-    <Create :module="module" :is-edit="true" />
+    <CreateModulePage :module="module" is-edit />
 </template>

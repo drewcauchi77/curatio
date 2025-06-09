@@ -6,7 +6,7 @@ export interface PaginationResponse {
     from: number;
     last_page: number;
     last_page_url: string;
-    links: any;
+    links: Object;
     next_page_url: string;
     path: string;
     per_page: number;
@@ -175,11 +175,17 @@ export interface ModulesIndexProps {
 export interface ModulesShowProps {
     module: Module;
     flash?: FlashResponse | undefined;
+    errors?: ComponentErrorData;
 }
 
 export interface ModulesCreateProps {
     module?: Module;
     flash?: FlashResponse | undefined;
+    errors?: ComponentErrorData;
+}
+
+export interface ComponentErrorData {
+    errors: Object;
 }
 
 /**
@@ -209,4 +215,14 @@ export interface CoursesIndexProps extends FilterProps {
 
 export interface ChannelInfoProps {
     channelInfo: ChannelInfo;
+}
+
+export interface ModuleComponentData {
+    clearHistory: boolean;
+    component: string;
+    encryptHistory: boolean;
+    props: ModulesShowProps;
+    rememberedState: Object;
+    url: string;
+    version: string;
 }

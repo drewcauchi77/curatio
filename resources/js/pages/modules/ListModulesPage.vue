@@ -96,17 +96,17 @@ watch(status, getFilteredModules);
                 />
 
                 <TableContainer>
-                    <template v-slot:head>
+                    <template #head>
                         <TableHead
                             :headings="[$t('modules.title'), $t('modules.description'), $t('general.status'), $t('general.actions')]"
                             :sizes="[3, 5, 3, 1]"
                         />
                     </template>
-                    <template v-slot:body>
+                    <template #body>
                         <EmptyData v-if="modules.data.length === 0" :title="$t('modules.not-found-modules')" />
                         <TableRow
-                            v-else
                             v-for="(module, index) in modules.data"
+                            v-else
                             :key="module.id"
                             :class="{ 'bg-muted/50': index % 2 == 1 }"
                             :title="module.title"
@@ -118,10 +118,15 @@ watch(status, getFilteredModules);
                     </template>
                 </TableContainer>
 
-                <Pagination :pagination="modules" :preserve-query="true"></Pagination>
+                <Pagination :pagination="modules" preserve-query></Pagination>
             </div>
         </div>
     </div>
 
-    <VideoGenerate v-if="withModal == 'VideoGenerateModal'" :title="$t('videos.generate-title')" :connection="connection" :channelData="channelData"></VideoGenerate>
+    <VideoGenerate
+        v-if="withModal == 'VideoGenerateModal'"
+        :title="$t('videos.generate-title')"
+        :connection="connection"
+        :channel-data="channelData"
+    ></VideoGenerate>
 </template>

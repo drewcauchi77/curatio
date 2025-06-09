@@ -13,6 +13,6 @@ class CompanyController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Settings');
+        return Inertia::render('SettingsPage');
     }
 }

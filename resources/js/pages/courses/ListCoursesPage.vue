@@ -64,14 +64,14 @@ watch(order, getFilteredCourses);
                 </div>
 
                 <TableContainer>
-                    <template v-slot:head>
+                    <template #head>
                         <TableHead :headings="[$t('courses.title'), $t('general.status'), $t('general.actions')]" :sizes="[8, 3, 1]" />
                     </template>
-                    <template v-slot:body>
+                    <template #body>
                         <EmptyData v-if="courses.data.length === 0" :title="$t('modules.not-found-modules')" />
                         <TableRow
-                            v-else
                             v-for="(course, index) in courses.data"
+                            v-else
                             :key="course.id"
                             :class="{ 'bg-muted/50': index % 2 == 1 }"
                             :items="[course.title, capitalizeFirstLetter(course.status)]"

@@ -57,7 +57,7 @@ const toggleSidebar = (): void => {
                 :collapsed="statusStore.isMenuCollapsed || statusStore.isMobile"
                 method="post"
                 as="button"
-                :isDestructive="true"
+                is-destructive
                 class="cursor-pointer"
             >
                 <LogOut class="h-5 w-5 flex-shrink-0" />
@@ -65,9 +65,9 @@ const toggleSidebar = (): void => {
 
             <button
                 v-if="!statusStore.isMobile"
-                @click="toggleSidebar"
                 class="bg-muted hover:bg-accent hover:text-accent-foreground mb-2 flex w-full cursor-pointer items-center overflow-hidden rounded-lg px-2 py-3 transition-colors"
                 :class="{ 'justify-center': statusStore.isMenuCollapsed }"
+                @click="toggleSidebar"
             >
                 <div class="flex-shrink-0">
                     <ChevronLeft v-if="!statusStore.isMenuCollapsed" class="h-5 w-5" />
@@ -83,7 +83,3 @@ const toggleSidebar = (): void => {
         </div>
     </div>
 </template>
-
-<style scoped>
-/* All styles are now handled via reactivity */
-</style>

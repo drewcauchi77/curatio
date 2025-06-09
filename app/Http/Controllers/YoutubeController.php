@@ -10,7 +10,6 @@ use App\Services\Youtube\YoutubeAuthService;
 use App\Services\Youtube\YoutubeConnectionHandler;
 use App\Services\Youtube\YoutubeDataService;
 use App\Traits\Module\HandlesModulePageRedirect;
-use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -62,6 +61,6 @@ class YoutubeController extends Controller
             }
         }
 
-        return Inertia::render('modules/Modules', $data);
+        return Inertia::render('modules/ListModulesPage', $data);
     }
 }

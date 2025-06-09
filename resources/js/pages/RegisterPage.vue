@@ -2,14 +2,14 @@
 import { Link, useForm, InertiaForm } from '@inertiajs/vue3';
 import type { RegisterForm } from '@/definitions/types';
 import { useCurrentYear } from '@/composables/useDates';
-
 import FormLayout from '@/components/layouts/FormLayout.vue';
 import InputField from '@/components/global/InputField.vue';
 import { Button } from '@/components/ui/button';
 import { User, Mail, Lock, Building2 } from 'lucide-vue-next';
 
-const { currentYear } = useCurrentYear();
 defineOptions({ hasLayout: false });
+
+const { currentYear } = useCurrentYear();
 
 const registerForm: InertiaForm<RegisterForm> = useForm({
     fullName: '',
@@ -25,56 +25,56 @@ const registerUser = (): void => {
 </script>
 
 <template>
-    <FormLayout subTitle="Create your account today">
-        <template v-slot:main>
+    <FormLayout sub-title="Create your account today">
+        <template #main>
             <form class="p-8" @submit.prevent="registerUser()">
                 <div class="space-y-5">
                     <InputField
-                        inputName="fullName"
-                        :labelName="$t('label.full-name')"
-                        inputType="text"
-                        :placeholder="$t('input.placeholders.full-name')"
                         v-model="registerForm.fullName"
+                        input-name="fullName"
+                        :label-name="$t('label.full-name')"
+                        input-type="text"
+                        :placeholder="$t('input.placeholders.full-name')"
                     >
                         <User class="h-5" />
                     </InputField>
 
                     <InputField
-                        inputName="email"
-                        :labelName="$t('label.email')"
-                        inputType="text"
-                        :placeholder="$t('input.placeholders.email')"
                         v-model="registerForm.email"
+                        input-name="email"
+                        :label-name="$t('label.email')"
+                        input-type="text"
+                        :placeholder="$t('input.placeholders.email')"
                     >
                         <Mail class="h-5" />
                     </InputField>
 
                     <InputField
-                        inputName="companyName"
-                        :labelName="$t('label.company')"
-                        inputType="text"
-                        :placeholder="$t('input.placeholders.company')"
                         v-model="registerForm.companyName"
+                        input-name="companyName"
+                        :label-name="$t('label.company')"
+                        input-type="text"
+                        :placeholder="$t('input.placeholders.company')"
                     >
                         <Building2 class="h-5" />
                     </InputField>
 
                     <InputField
-                        inputName="password"
-                        :labelName="$t('label.password')"
-                        inputType="password"
-                        :placeholder="$t('input.placeholders.password')"
                         v-model="registerForm.password"
+                        input-name="password"
+                        :label-name="$t('label.password')"
+                        input-type="password"
+                        :placeholder="$t('input.placeholders.password')"
                     >
                         <Lock class="h-5" />
                     </InputField>
 
                     <InputField
-                        inputName="confirmPassword"
-                        :labelName="$t('label.confirm-password')"
-                        inputType="password"
-                        :placeholder="$t('input.placeholders.password')"
                         v-model="registerForm.password_confirmation"
+                        input-name="confirmPassword"
+                        :label-name="$t('label.confirm-password')"
+                        input-type="password"
+                        :placeholder="$t('input.placeholders.password')"
                     >
                         <Lock class="h-5" />
                     </InputField>
@@ -95,7 +95,7 @@ const registerUser = (): void => {
             </div>
         </template>
 
-        <template v-slot:footer>
+        <template #footer>
             <div class="text-foreground-light text-center text-xs">
                 <p>{{ $t('general.copyright', ['currentYear', currentYear.toString()]) }}</p>
             </div>

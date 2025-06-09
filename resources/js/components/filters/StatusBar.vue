@@ -10,7 +10,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <div class="border-border flex items-center gap-4 border-b px-2 pb-4 sm:gap-6 sm:px-4" v-if="statuses !== null">
+    <div v-if="statuses !== null" class="border-border flex items-center gap-4 border-b px-2 pb-4 sm:gap-6 sm:px-4">
         <Button
             v-for="(status, index) in statuses"
             :key="index"

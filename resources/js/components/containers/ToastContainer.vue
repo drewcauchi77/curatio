@@ -36,19 +36,12 @@ const getTextColor = (type: Toast['type']) => {
             v-for="toast in toasts"
             :key="toast.id"
             :duration="toast.duration"
-            :class="[
-                getBgColor(toast.type),
-                'rounded-lg border p-4 shadow-sm',
-                'flex items-start justify-between gap-3',
-                'data-[state=open]:animate-slideIn data-[state=closed]:animate-hide',
-                'data-[swipe=move]:translate-x-[var(--reka-toast-swipe-move-x)]',
-                'data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out]',
-                'data-[swipe=end]:animate-swipeOut',
-            ]"
+            class="data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=end]:animate-swipeOut flex items-start justify-between gap-3 rounded-lg border p-4 shadow-sm data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=move]:translate-x-[var(--reka-toast-swipe-move-x)]"
+            :class="getBgColor(toast.type)"
         >
             <div class="flex flex-grow items-start gap-3">
                 <div class="flex flex-col">
-                    <ToastTitle :class="[getTextColor(toast.type), 'text-sm font-medium']">
+                    <ToastTitle class="text-sm font-medium" :class="getTextColor(toast.type)">
                         {{ toast.title }}
                     </ToastTitle>
 
@@ -59,8 +52,8 @@ const getTextColor = (type: Toast['type']) => {
             </div>
 
             <ToastClose
-                class="cursor-pointer"
-                :class="[getTextColor(toast.type), 'flex-shrink-0']"
+                class="flex-shrink-0 cursor-pointer"
+                :class="getTextColor(toast.type)"
                 aria-label="Close"
                 @click="toastStore.removeToast(toast.id)"
             >

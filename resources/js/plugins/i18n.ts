@@ -14,7 +14,7 @@ const replacePlaceholders = (text: string, replacements: [string, string][]): st
 };
 
 export default {
-    install: (app, options) => {
+    install: (app) => {
         app.config.globalProperties.$t = (key: string, ...replacements: [string, string][]): string => {
             const translation = getNestedTranslation(en, key);
             if (!translation || typeof translation !== 'string') return key;

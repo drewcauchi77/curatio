@@ -1,5 +1,5 @@
-import MainLayout from '@/components/layouts/MainLayout.vue';
 import MetaTags from '@/components/global/MetaTags.vue';
+import MainLayout from '@/components/layouts/MainLayout.vue';
 import type { ImportMetaData } from '@/definitions/types';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { createPinia } from 'pinia';
@@ -9,7 +9,7 @@ import i18n from './plugins/i18n';
 import { useStatusStore } from './store/status.store';
 
 createInertiaApp({
-    title: title => `Curatio | ${title}`,
+    title: (title) => `Curatio | ${title}`,
     progress: {
         color: '#6200ee',
     },

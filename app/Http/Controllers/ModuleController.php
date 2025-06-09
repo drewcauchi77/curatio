@@ -50,7 +50,7 @@ class ModuleController extends Controller
             return $this->redirectToFirstPage($request, 'modules.index');
         }
 
-        return Inertia::render('modules/Modules', $result);
+        return Inertia::render('modules/ListModulesPage', $result);
     }
 
     /**
@@ -60,7 +60,7 @@ class ModuleController extends Controller
      */
     public function create(): InertiaResponse
     {
-        return Inertia::render('modules/Create');
+        return Inertia::render('modules/CreateModulePage');
     }
 
     /**
@@ -94,7 +94,7 @@ class ModuleController extends Controller
     {
         $module->load('status');
 
-        return Inertia::render('modules/Show', [
+        return Inertia::render('modules/ShowModulePage', [
             'module' => $module,
         ]);
     }

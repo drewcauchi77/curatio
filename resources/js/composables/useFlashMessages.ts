@@ -13,7 +13,7 @@ export function useFlashMessages(flash: FlashResponse, duration: number) {
                 type: flash?.type,
                 title: proxy.$t(flash.title),
                 message: proxy.$t(flash.message),
-                duration: duration,
+                duration,
             });
         }
     };

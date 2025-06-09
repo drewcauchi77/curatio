@@ -2,11 +2,10 @@
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
-import { Share2, ChevronLeft, Users, Video, Eye } from 'lucide-vue-next';
+import { Share2, ChevronLeft } from 'lucide-vue-next';
 import { VideoGenerateProps } from '@/definitions/interfaces';
 import ModalLayout from '../layouts/ModalLayout.vue';
 import ChannelInfo from '../channel/ChannelInfo.vue';
-import { channel } from 'diagnostics_channel';
 
 defineProps<VideoGenerateProps>();
 
@@ -16,13 +15,6 @@ const channelForm = useForm({
     channel: '',
 });
 
-const handleSubmit = () => {
-    channelForm.post('/modules/auth', {
-        onSuccess: () => {
-        },
-    });
-};
-
 const closeModal = () => {
     modalRef.value?.closeModal();
 };
@@ -30,12 +22,16 @@ const closeModal = () => {
 
 <template>
     <ModalLayout ref="modalRef" :title="$t('video-generate.title')" back-link="/modules">
-        <template v-slot:main>
-            <p class="text-foreground" v-html="$t('video-generate.description')"></p>
+        <template #main>
+            <div class="text-foreground">
+                <p class="mb-6">{{ $t('video-generate.description.line1') }}</p>
+                <p class="mb-6">{{ $t('video-generate.description.line2') }}</p>
+                <p>{{ $t('video-generate.description.line3') }}</p>
+            </div>
 
             <ChannelInfo v-if="channelData && connection.connected" :channel-info="channelData"></ChannelInfo>
         </template>
-        <template v-slot:footer>
+        <template #footer>
             <div class="flex justify-end gap-3">
                 <Button variant="secondary" @click="closeModal()">
                     <ChevronLeft class="h-5 w-5" />
@@ -46,7 +42,7 @@ const closeModal = () => {
                         <Share2 class="h-4 w-4" />
                         <strong class="hidden sm:block">Disconnect Account</strong>
                     </div>
-                    <a :href="connection.authUrl" v-else class="inline-flex items-center gap-2">
+                    <a v-else :href="connection.authUrl" class="inline-flex items-center gap-2">
                         <Share2 class="h-4 w-4" />
                         <strong class="hidden sm:block">Connect Your Account</strong>
                     </a>

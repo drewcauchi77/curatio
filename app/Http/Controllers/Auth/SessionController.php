@@ -17,7 +17,7 @@ class SessionController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Login');
+        return Inertia::render('LoginPage');
     }
 
     /**
@@ -50,6 +50,6 @@ class SessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Inertia::render('Login');
+        return Inertia::render('LoginPage');
     }
 }

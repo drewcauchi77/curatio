@@ -39,6 +39,8 @@ const saveActionName = computed((): string => {
     } else if (props.status === 'draft') {
         return 'publish';
     }
+
+    return 'update';
 });
 
 const deleteActionName = computed((): string => {
@@ -62,10 +64,10 @@ const deleteActionName = computed((): string => {
                 <div class="space-y-4 p-4">
                     <div class="flex flex-col gap-2 sm:flex-row lg:flex-col">
                         <Button
-                            @click="handleSave()"
                             v-if="props.status !== 'deleted'"
                             variant="outline"
                             class="flex-1 cursor-pointer justify-center gap-2 text-sm hover:text-black lg:w-full"
+                            @click="handleSave()"
                         >
                             <FileText class="h-4 w-4" />
                             {{ $t(`actions.${saveActionName}`) }}
@@ -94,8 +96,8 @@ const deleteActionName = computed((): string => {
                         <Button
                             v-if="status !== ''"
                             variant="link"
-                            @click="handleMove()"
                             class="with-svg flex cursor-pointer items-center gap-2 text-sm text-red-600 hover:text-red-700"
+                            @click="handleMove()"
                         >
                             <Trash2 class="h-4 w-4" />
                             {{ $t(`actions.${deleteActionName}`) }}

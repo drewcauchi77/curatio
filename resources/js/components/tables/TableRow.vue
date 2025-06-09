@@ -12,9 +12,9 @@ defineProps<TableRowProps>();
         <div class="grid grid-cols-12 items-center gap-0 px-6 py-4">
             <div
                 v-for="(item, index) in items"
+                :key="index"
                 class="flex items-center gap-2"
                 :style="`grid-column: span ${sizes[index]} / span ${sizes[index]};`"
-                :key="index"
             >
                 <h3 v-if="index == 0" class="text-foreground text-sm font-medium">{{ item }}</h3>
                 <p v-else class="text-muted-foreground line-clamp-2 text-sm">{{ item }}</p>

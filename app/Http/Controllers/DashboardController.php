@@ -13,6 +13,6 @@ class DashboardController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Dashboard');
+        return Inertia::render('DashboardPage');
     }
 }

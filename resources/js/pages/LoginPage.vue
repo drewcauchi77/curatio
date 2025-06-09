@@ -2,14 +2,14 @@
 import { Link, useForm, InertiaForm } from '@inertiajs/vue3';
 import type { LoginForm } from '@/definitions/types';
 import { useCurrentYear } from '@/composables/useDates';
-
 import FormLayout from '@/components/layouts/FormLayout.vue';
 import InputField from '@/components/global/InputField.vue';
 import { Button } from '@/components/ui/button';
 import { Mail, Lock } from 'lucide-vue-next';
 
-const { currentYear } = useCurrentYear();
 defineOptions({ hasLayout: false });
+
+const { currentYear } = useCurrentYear();
 
 const loginForm: InertiaForm<LoginForm> = useForm({
     email: '',
@@ -23,25 +23,25 @@ const loginUser = (): void => {
 
 <template>
     <FormLayout>
-        <template v-slot:main>
+        <template #main>
             <form class="p-8" @submit.prevent="loginUser()">
                 <div class="space-y-5">
                     <InputField
-                        inputName="email"
-                        :labelName="$t('label.email')"
-                        inputType="email"
-                        :placeholder="$t('input.placeholders.email')"
                         v-model="loginForm.email"
+                        input-name="email"
+                        :label-name="$t('label.email')"
+                        input-type="email"
+                        :placeholder="$t('input.placeholders.email')"
                     >
                         <Mail class="h-5" />
                     </InputField>
 
                     <InputField
-                        inputName="password"
-                        :labelName="$t('label.password')"
-                        inputType="password"
-                        :placeholder="$t('input.placeholders.password')"
                         v-model="loginForm.password"
+                        input-name="password"
+                        :label-name="$t('label.password')"
+                        input-type="password"
+                        :placeholder="$t('input.placeholders.password')"
                     >
                         <Lock class="h-5" />
                     </InputField>
@@ -62,7 +62,7 @@ const loginUser = (): void => {
             </div>
         </template>
 
-        <template v-slot:footer>
+        <template #footer>
             <div class="text-foreground-light text-center text-xs">
                 <p>{{ $t('general.copyright', ['currentYear', currentYear.toString()]) }}</p>
             </div>

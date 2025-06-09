@@ -48,7 +48,7 @@ const getPageUrl = (page: number): string => {
 </script>
 
 <template>
-    <div class="my-4 flex items-center justify-center gap-1 select-none" v-if="pagination.last_page > 1">
+    <div v-if="pagination.last_page > 1" class="my-4 flex items-center justify-center gap-1 select-none">
         <Link
             :href="pagination.current_page === 1 ? '#' : getPageUrl(pagination.current_page - 1)"
             class="flex items-center justify-center rounded-md p-2 transition-colors"

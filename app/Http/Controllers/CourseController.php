@@ -36,7 +36,7 @@ class CourseController extends Controller
                 'status'        => $module->status->status,
             ]);
 
-        return Inertia::render('courses/Courses', [
+        return Inertia::render('courses/ListCoursesPage', [
             'courses'   => $courses,
             'q'         => $search,
             'order'     => $order,
@@ -56,7 +56,7 @@ class CourseController extends Controller
             ->where('company_id', Auth::user()->company_id)
             ->get();
 
-        return Inertia::render('courses/Create', [
+        return Inertia::render('courses/CreateCoursePage', [
             'modules' => $modules
         ]);
     }
@@ -80,7 +80,7 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
-        return Inertia::render('courses/Show', [
+        return Inertia::render('courses/ShowCoursePage', [
             'course' => $course,
         ]);
     }
