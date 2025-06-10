@@ -13,8 +13,7 @@ trait ModuleScopes
      * Query for modules on company ID.
      * 
      * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
-     *          string $companyId
-     * 
+     * @param   string $companyId
      * @return  Illuminate\Contracts\Database\Eloquent\Builder
      */
     public function scopeForCompany(Builder $query, string $companyId): Builder
@@ -26,8 +25,7 @@ trait ModuleScopes
      * Query for modules on the status.
      * 
      * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
-     *          string $status
-     * 
+     * @param   string $status
      * @return  Illuminate\Contracts\Database\Eloquent\Builder
      */
     public function scopeWithStatus(Builder $query, string $status): Builder
@@ -40,8 +38,7 @@ trait ModuleScopes
      * Query for modules for the search functionality through title.
      * 
      * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
-     *          string? $search
-     * 
+     * @param   string? $search
      * @return  Illuminate\Contracts\Database\Eloquent\Builder
      */
     public function scopeSearch(Builder $query, ?string $search): Builder
@@ -55,7 +52,6 @@ trait ModuleScopes
      * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
      * @param   string $orderBy
      * @param   string $order
-     * 
      * @return  Illuminate\Contracts\Database\Eloquent\Builder
      */
     public function scopeOrderByField(Builder $query, string $orderBy, string $order): Builder

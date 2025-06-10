@@ -6,16 +6,14 @@ use App\DTO\Module\ModuleFilterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
 use App\Services\Module\ModuleQueryService;
-use App\Services\Youtube\YoutubeAuthService;
-use App\Services\Youtube\YoutubeConnectionHandler;
-use App\Services\Youtube\YoutubeDataService;
+use App\Services\YoutubeChannel\YoutubeAuthService;
 use App\Traits\Module\HandlesModulePageRedirect;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
-class YoutubeController extends Controller
+class YoutubeChannelController extends Controller
 {
     use HandlesModulePageRedirect;
 
@@ -24,43 +22,50 @@ class YoutubeController extends Controller
      */
     function __construct(
         private readonly ModuleQueryService $queryService,
-        private readonly YoutubeDataService $dataService,
         private readonly YoutubeAuthService $authService,
-        private readonly YoutubeConnectionHandler $connectionHandler
     ) {}
 
     /**
      * Query for the modules with search and ordering + sending props for modal opening.
      *
      * @param   \App\Http\Requests\Module\IndexModuleRequest $request
-     *
      * @return  \Illuminate\Http\RedirectResponse|\Inertia\Response
      */
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
-        if ($redirect = $this->connectionHandler->handleRequest($request)) {
-            return $redirect;
+        if ($request->has('code')) {
+            try {
+                $this->authService->handleAuthCallback($request->input('code'), $request->user());
+                // Where we get to here? TODO
+                return redirect()->route('modules.index');
+            } catch (\Exception $e) {
+                // Check errors here? TODO
+                return redirect()->route('modules.index')->withErrors(['youtube' => 'Authentication failed']);
+            }
         }
 
         $filterData = ModuleFilterData::fromRequest($request);
         $result = $this->queryService->getFilteredModulesWithModal($filterData, 'VideoGenerateModal');
-        $youtubeConnection = $this->authService->getConnectionStatus();
+        $youtubeConnection = $this->authService->getConnectionStatus($request->user());
 
         if ($result['modules']->currentPage() > $result['modules']->lastPage() && $result['modules']->lastPage() > 0) {
             return $this->redirectToFirstPage($request, 'modules.index');
         }
 
-        $data = array_merge($result, ['connection' => $youtubeConnection]);
+        return Inertia::render('modules/ListModulesPage', array_merge($result, [
+            'connection' => $youtubeConnection
+        ]));
+    }
 
-        if (Session::has('google_oauth_token')) {
-            $channelData = $this->dataService->getChannelData();
-            if ($channelData) {
-                $data['channelData'] = $channelData;
-                // Optionally store channel data in session for future use
-                session(['youtube_channel_data' => $channelData]);
-            }
-        }
+    public function connect(): RedirectResponse
+    {
+        $authUrl = $this->authService->getAuthUrl();
+        return redirect($authUrl);
+    }
 
-        return Inertia::render('modules/ListModulesPage', $data);
+    public function destroy(Request $request): RedirectResponse
+    {
+        $this->authService->disconnect($request->user());
+        return redirect()->route('modules.index');
     }
 }

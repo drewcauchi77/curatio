@@ -107,13 +107,14 @@ export interface ModalLayoutProps {
     backLink: string;
 }
 
+// todo
 export interface ChannelInfo {
     id: string;
-    name: string;
-    profilePicture: string;
-    subscriberCount: string;
-    videoCount: string;
-    viewCount: string;
+    name?: string;
+    profilePicture?: string;
+    subscriberCount?: string;
+    videoCount?: string;
+    viewCount?: string;
 }
 
 /**
@@ -194,12 +195,12 @@ export interface ComponentErrorData {
 export interface YoutubeConnectionProps {
     authUrl: string | null;
     connected: boolean;
+    channelData?: ChannelInfo; // TODO
 }
 
 export interface VideoGenerateProps {
     title: string;
     connection: YoutubeConnectionProps;
-    channelData?: ChannelInfo;
 }
 
 /**

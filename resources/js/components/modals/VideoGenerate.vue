@@ -5,18 +5,20 @@ import { Button } from '@/components/ui/button';
 import { Share2, ChevronLeft } from 'lucide-vue-next';
 import { VideoGenerateProps } from '@/definitions/interfaces';
 import ModalLayout from '../layouts/ModalLayout.vue';
-import ChannelInfo from '../channel/ChannelInfo.vue';
+// import ChannelInfo from '../channel/ChannelInfo.vue';
 
 defineProps<VideoGenerateProps>();
 
 const modalRef = ref<InstanceType<typeof ModalLayout>>();
 
-const channelForm = useForm({
-    channel: '',
-});
-
 const closeModal = () => {
     modalRef.value?.closeModal();
+};
+
+const disconnectForm = useForm({});
+
+const handleDisconnect = (): void => {
+    disconnectForm.delete('/modules/generate');
 };
 </script>
 
@@ -28,8 +30,8 @@ const closeModal = () => {
                 <p class="mb-6">{{ $t('video-generate.description.line2') }}</p>
                 <p>{{ $t('video-generate.description.line3') }}</p>
             </div>
-
-            <ChannelInfo v-if="channelData && connection.connected" :channel-info="channelData"></ChannelInfo>
+            {{ connection.channelData }}
+            <!-- <ChannelInfo v-if="channelData && connection.connected" :channel-info="channelData"></ChannelInfo> -->
         </template>
         <template #footer>
             <div class="flex justify-end gap-3">
@@ -37,12 +39,14 @@ const closeModal = () => {
                     <ChevronLeft class="h-5 w-5" />
                     <strong>{{ $t('actions.go-back') }}</strong>
                 </Button>
-                <Button as-child class="ml-4" :disabled="channelForm.processing">
-                    <div v-if="connection.connected" class="inline-flex items-center gap-2">
+                <Button v-if="connection.connected" as-child class="ml-4" @click="handleDisconnect()">
+                    <div class="inline-flex items-center gap-2">
                         <Share2 class="h-4 w-4" />
                         <strong class="hidden sm:block">Disconnect Account</strong>
                     </div>
-                    <a v-else :href="connection.authUrl" class="inline-flex items-center gap-2">
+                </Button>
+                <Button v-else as-child class="ml-4">
+                    <a :href="connection.authUrl" class="inline-flex items-center gap-2">
                         <Share2 class="h-4 w-4" />
                         <strong class="hidden sm:block">Connect Your Account</strong>
                     </a>
