@@ -107,7 +107,6 @@ export interface ModalLayoutProps {
     backLink: string;
 }
 
-// todo
 export interface ChannelInfo {
     id: string;
     name?: string;
@@ -195,7 +194,7 @@ export interface ComponentErrorData {
 export interface YoutubeConnectionProps {
     authUrl: string | null;
     connected: boolean;
-    channelData?: ChannelInfo; // TODO
+    channelData?: ChannelInfo;
 }
 
 export interface VideoGenerateProps {

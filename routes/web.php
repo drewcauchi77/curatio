@@ -23,10 +23,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('modules', [ModuleController::class, 'index'])->name('modules.index');
     Route::get('modules/create', [ModuleController::class, 'create'])->name('modules.create');
     Route::post('modules/create', [ModuleController::class, 'store'])->name('modules.store');
-    Route::get('modules/generate', [YoutubeChannelController::class, 'index'])->name('modules.index');
-    // TODO
-    Route::post('modules/connect', [YoutubeChannelController::class, 'connect'])->name('youtube.connect');
-    Route::post('modules/disconnect', [YoutubeChannelController::class, 'destroy'])->name('youtube.destroy');
+    Route::get('modules/youtube', [YoutubeChannelController::class, 'index'])->name('modules.youtube.index');
+    Route::delete('modules/youtube', [YoutubeChannelController::class, 'destroy'])->name('modules.youtube.destroy');
 
     Route::get('modules/{module}', [ModuleController::class, 'show'])->name('modules.show');
     Route::put('modules/{module}', [ModuleController::class, 'update'])->name('modules.update');

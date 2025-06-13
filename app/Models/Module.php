@@ -12,18 +12,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Module model.
  * 
- * @property string $id Primary UUID
- * @property string $title Module title
- * @property string|null $description Module description
- * @property string $company_id Foreign key to companies
- * @property int $status_id Foreign key to statuses
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property string $id
+ * @property string $title
+ * @property string|null $description
+ * @property string $company_id
+ * @property int $status_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * 
- * @property-read string $status_slug Status slug (draft, published, etc.)
- * @property-read \App\Models\Company $company
- * @property-read \App\Models\Status $status
- * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Course> $courses
+ * @property-read string $status_slug
+ * @property-read Company $company
+ * @property-read Status $status
+ * @property-read Collection<Course> $courses
  */
 class Module extends Model
 {
@@ -32,7 +32,7 @@ class Module extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var     list<string>
      */
     protected $fillable = [
         'title',
@@ -44,7 +44,7 @@ class Module extends Model
     /**
      * The attributes that should be eager loaded.
      *
-     * @var list<string>
+     * @var     list<string>
      */
     protected $with = [
         'status'
@@ -53,7 +53,7 @@ class Module extends Model
     /**
      * The attributes that are appended.
      *
-     * @var list<string>
+     * @var     list<string>
      */
     protected $appends = [
         'status_slug'
@@ -62,7 +62,7 @@ class Module extends Model
     /**
      * Get the courses that contain this module.
      *
-     * @return BelongsToMany<Course, $this>
+     * @return  BelongsToMany<Course, $this>
      */
     public function courses(): BelongsToMany
     {
@@ -72,7 +72,7 @@ class Module extends Model
     /**
      * Get the company that owns this module.
      *
-     * @return BelongsTo<Company, $this>
+     * @return  BelongsTo<Company, $this>
      */
     public function company(): BelongsTo
     {
@@ -82,7 +82,7 @@ class Module extends Model
     /**
      * Get the status of this module.
      *
-     * @return BelongsTo<Status, $this>
+     * @return  BelongsTo<Status, $this>
      */
     public function status(): BelongsTo
     {
@@ -92,7 +92,7 @@ class Module extends Model
     /**
      * Get the status slug accessor (draft, published, etc.).
      *
-     * @return string
+     * @return  string
      */
     public function getStatusSlugAttribute(): string
     {

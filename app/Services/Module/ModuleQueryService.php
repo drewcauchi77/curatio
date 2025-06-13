@@ -14,7 +14,7 @@ class ModuleQueryService
     /**
      * Initialize the service with repository dependency.
      * 
-     * @param ModuleRepository $repository Repository for module data access
+     * @param   ModuleRepository $repository
      */
     function __construct(
         private readonly ModuleRepository $repository
@@ -23,12 +23,8 @@ class ModuleQueryService
     /**
      * Get filtered modules with status counts and pagination.
      * 
-     * @param ModuleFilterData $filters Filter criteria for modules
-     * @return array{
-     *      modules: mixed, 
-     *      counts: array<string, int>, 
-     *      filters: ModuleFilterData
-     * } Contains modules (paginated), counts (by status), and applied filters
+     * @param   ModuleFilterData $filters
+     * @return  array{ modules: mixed, counts: array<string, int>, filters: ModuleFilterData }
      */
     public function getFilteredModules(ModuleFilterData $filters): array
     {
@@ -45,14 +41,9 @@ class ModuleQueryService
     /**
      * Get filtered modules through getFilteredModules() with a modal to be opened.
      * 
-     * @param ModuleFilterData $filters Filter criteria for modules
-     * @param string $modal Modal name then handled in Vue
-     * @return array{
-     *      modules: mixed, 
-     *      counts: array<string, int>, 
-     *      filters: ModuleFilterData,
-     *      modal: string
-     * } Contains modules (paginated), counts (by status), applied filters and modal to be opened.
+     * @param   ModuleFilterData $filters
+     * @param   string $modal
+     * @return  array{ modules: mixed, counts: array<string, int>, filters: ModuleFilterData, modal: string }
      */
     public function getFilteredModulesWithModal(ModuleFilterData $filters, string $modal): array
     {
@@ -61,13 +52,5 @@ class ModuleQueryService
         ]);
 
         return $data;
-    }
-
-    public function shouldRedirectToFirstPage(ModuleFilterData $filterData, LengthAwarePaginator $paginator): bool
-    {
-        $requestedPage = $filterData->page ?? 1;
-        $lastPage = $paginator->lastPage();
-
-        return $requestedPage > $lastPage && $lastPage > 0;
     }
 }

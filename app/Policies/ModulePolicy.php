@@ -13,8 +13,8 @@ class ModulePolicy
     /**
      * Check if user can view module listings.
      * 
-     * @param User $user The user to authorize
-     * @return bool True if user belongs to a company
+     * @param   User $user
+     * @return  bool
      */
     public function viewAny(User $user): bool
     {
@@ -24,9 +24,9 @@ class ModulePolicy
     /**
      * Check if user can view a specific module.
      * 
-     * @param User $user The user to authorize
-     * @param Module $module The module to view
-     * @return bool True if user's company matches module's company
+     * @param   User $user
+     * @param   Module $module
+     * @return  bool
      */
     public function view(User $user, Module $module): bool
     {
@@ -36,8 +36,8 @@ class ModulePolicy
     /**
      * Check if user can access module creation form.
      * 
-     * @param User $user The user to authorize
-     * @return bool True if user has company and is admin (role_id 1)
+     * @param   User $user
+     * @return  bool
      */
     public function create(User $user): bool
     {
@@ -47,9 +47,9 @@ class ModulePolicy
     /**
      * Check if user can store a module with given attributes.
      * 
-     * @param User $user The user to authorize
-     * @param array $attributes Module attributes to validate
-     * @return bool True if company matches and user is admin
+     * @param   User $user
+     * @param   array $attributes
+     * @return  bool
      */
     public function store(User $user, array $attributes): bool
     {
@@ -61,9 +61,9 @@ class ModulePolicy
     /**
      * Check if user can update a module.
      * 
-     * @param User $user The user to authorize
-     * @param Module $module The module to update
-     * @return bool True if user's company matches and is admin
+     * @param   User $user
+     * @param   Module $module
+     * @return  bool
      */
     public function update(User $user, Module $module): bool
     {
@@ -73,9 +73,9 @@ class ModulePolicy
     /**
      * Check if user can delete a module.
      * 
-     * @param User $user The user to authorize
-     * @param Module $module The module to delete
-     * @return bool True if user can update (same permissions)
+     * @param   User $user
+     * @param   Module $module
+     * @return  bool
      */
     public function delete(User $user, Module $module): bool
     {

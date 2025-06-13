@@ -18,7 +18,7 @@ const closeModal = () => {
 const disconnectForm = useForm({});
 
 const handleDisconnect = (): void => {
-    disconnectForm.delete('/modules/generate');
+    disconnectForm.delete('/modules/youtube');
 };
 </script>
 
@@ -30,7 +30,9 @@ const handleDisconnect = (): void => {
                 <p class="mb-6">{{ $t('video-generate.description.line2') }}</p>
                 <p>{{ $t('video-generate.description.line3') }}</p>
             </div>
-            {{ connection.channelData }}
+            <h2 v-if="connection.channelData && connection.channelData.id">
+                {{ connection.channelData.id }}
+            </h2>
             <!-- <ChannelInfo v-if="channelData && connection.connected" :channel-info="channelData"></ChannelInfo> -->
         </template>
         <template #footer>

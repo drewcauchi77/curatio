@@ -8,8 +8,12 @@ use App\Repositories\YoutubeChannelRepository;
 use Exception;
 use Google\Client;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use Google\Service\YouTube;
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Service for handling authentication with the Google API for Youtube.
+ */
 class YoutubeAuthService
 {
     private Client $googleClient;
@@ -18,25 +22,27 @@ class YoutubeAuthService
     function __construct(
         private readonly YoutubeChannelRepository $channelRepository
     ) {
-        $this->redirectUrl = 'https://redirectmeto.com/http://curatio.com/modules/generate?auth=successful';
+        $this->redirectUrl = config('app.youtube.redirect_url');
         $this->initialiseGoogleClient();
     }
 
     private function initialiseGoogleClient(): void
     {
         $this->googleClient = new Client();
-        $this->googleClient->setClientId('abc'); // ADD SECRET TODO
-        $this->googleClient->setClientSecret('abc'); // ADD SECRET TODO
+        $this->googleClient->setClientId(config('app.youtube.client_id'));
+        $this->googleClient->setClientSecret(config('app.youtube.client_secret'));
         $this->googleClient->setRedirectUri($this->redirectUrl);
-        $this->googleClient->addScope('https://www.googleapis.com/auth/youtube');
+        $this->googleClient->addScope(config('app.youtube.scope_uri'));
         $this->googleClient->setAccessType('offline');
         $this->googleClient->setPrompt('consent');
 
-        // TODO this is unsafe
-        $httpClient = new GuzzleHttpClient([
-            'verify' => false,
-        ]);
-        $this->googleClient->setHttpClient($httpClient);
+        if (config('app.env') === 'local') {
+            $httpClient = new GuzzleHttpClient([
+                'verify' => false,
+            ]);
+
+            $this->googleClient->setHttpClient($httpClient);
+        }
     }
 
     public function getAuthUrl(): string
@@ -59,11 +65,10 @@ class YoutubeAuthService
             }
 
             $this->googleClient->setAccessToken($token);
-
-            $channelData = $this->getChannelDataFromApi();
+            $channelId = $this->getChannelId();
 
             $youtubeChannel = $this->channelRepository->createOrUpdate($user, [
-                'channel_id' => $channelData['id'],
+                'channel_id' => $channelId,
                 'access_token' => $token['access_token'],
                 'refresh_token' => $token['refresh_token'] ?? null,
                 'token_expires_at' => now()->addSeconds($token['expires_in'])
@@ -78,9 +83,9 @@ class YoutubeAuthService
         }
     }
 
-    private function getChannelDataFromApi(): array
+    private function getChannelId(): string
     {
-        $youtube = new \Google\Service\YouTube($this->googleClient);
+        $youtube = new YouTube($this->googleClient);
 
         $channelsResponse = $youtube->channels->listChannels('snippet,statistics', [
             'mine' => true
@@ -91,53 +96,8 @@ class YoutubeAuthService
         }
 
         $channel = $channelsResponse->getItems()[0];
-        $snippet = $channel->getSnippet();
-        $statistics = $channel->getStatistics();
 
-        return [
-            'id' => $channel->getId(),
-            'name' => $snippet->getTitle(),
-            'profilePicture' => $snippet->getThumbnails()->getHigh()->getUrl(),
-            'videoCount' => $statistics->getVideoCount(),
-            'subscriberCount' => $statistics->getSubscriberCount(),
-            'viewCount' => $statistics->getViewCount(),
-        ];
-    }
-
-    public function refreshToken(YoutubeChannel $channel): YoutubeChannel
-    {
-        if (!$channel->refresh_token) {
-            throw new Exception('No refresh token available');
-        }
-
-        $this->googleClient->setAccessToken([
-            'access_token' => $channel->access_token,
-            'refresh_token' => $channel->refresh_token
-        ]);
-
-        $newToken = $this->googleClient->fetchAccessTokenWithRefreshToken($channel->refresh_token);
-
-        if (isset($newToken['error'])) {
-            throw new Exception('Token refresh failed: ' . $newToken['error_description']);
-        }
-
-        $channel->update([
-            'access_token' => $newToken['access_token'],
-            'token_expires_at' => now()->addSeconds($newToken['expires_in'])
-        ]);
-
-        return $channel;
-    }
-
-    public function isUserConnected(User $user): bool
-    {
-        $channel = $this->channelRepository->findByUser($user);
-        return $channel && $channel->is_active;
-    }
-
-    public function disconnect(User $user): bool
-    {
-        return $this->channelRepository->disconnect($user);
+        return $channel->getId();
     }
 
     public function getConnectionStatus(User $user): array
@@ -148,14 +108,14 @@ class YoutubeAuthService
         return [
             'connected' => $connected,
             'authUrl' => $connected ? null : $this->getAuthUrl(),
-            'channelData' => $connected ? $this->formatChannelData($channel) : null
+            'channelData' => [
+                'id' => $connected ? $channel->channel_id : null
+            ]
         ];
     }
 
-    private function formatChannelData(YoutubeChannel $channel): array
+    public function disconnect(User $user): bool
     {
-        return [
-            'id' => $channel->channel_id,
-        ];
+        return $this->channelRepository->disconnect($user);
     }
 }

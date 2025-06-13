@@ -123,5 +123,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'youtube_api_key' => env('YOUTUBE_API_KEY', '')
+    /*
+    |--------------------------------------------------------------------------
+    | Youtube Service through the Google API
+    |--------------------------------------------------------------------------
+    */
+    'youtube' => [
+        'api_key' => env('YOUTUBE_API_KEY', ''),
+        'client_id' => env('YOUTUBE_CLIENT_ID', ''),
+        'project_id' => env('YOUTUBE_PROJECT_ID', ''),
+        'auth_uri' => env('YOUTUBE_AUTH_URI', ''),
+        'token_uri' => env('YOUTUBE_TOKEN_URI', ''),
+        'scope_uri' => env('YOUTUBE_SCOPE_URI', ''),
+        'auth_provider_x509_cert_url' => env('YOUTUBE_AUTH_PROVIDER_X509_CERT_URL', ''),
+        'client_secret' => env('YOUTUBE_CLIENT_SECRET', ''),
+        'redirect_url' => env('YOUTUBE_REDIRECT_URL', '')
+    ]
 ];

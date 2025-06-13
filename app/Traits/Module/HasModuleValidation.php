@@ -10,7 +10,7 @@ trait HasModuleValidation
     /**
      * Get validation rules for module fields.
      * 
-     * @return array<string, list<string>> Validation rules for title, description, and status_id
+     * @return  array<string, list<string>>
      */
     protected function moduleRules(): array
     {
@@ -38,7 +38,7 @@ trait HasModuleValidation
     /**
      * Get validation messages for module fields.
      * 
-     * @return array<string, string> Custom validation messages
+     * @return  array<string, string>
      */
     public function messages(): array
     {

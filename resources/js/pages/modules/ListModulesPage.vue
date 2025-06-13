@@ -55,7 +55,7 @@ watch(status, getFilteredModules);
         <MetaTags :title="$t('metatags.modules/Modules')"></MetaTags>
         <PageHeader :back-link="'/dashboard'" :title="$t('modules.title')">
             <Button as-child class="bg-[#ff0033] hover:bg-red-600">
-                <Link href="/modules/generate" class="inline-flex items-center gap-2">
+                <Link href="/modules/youtube" class="inline-flex items-center gap-2">
                     <Play class="h-4 w-4" />
                     <strong class="hidden sm:block">{{ $t('modules.generate-title') }}</strong>
                 </Link>

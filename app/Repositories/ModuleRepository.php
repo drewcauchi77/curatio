@@ -14,8 +14,8 @@ class ModuleRepository
     /**
      * Create a new module with the given attributes.
      * 
-     * @param array $attributes Module attributes to create
-     * @return Module The newly created module
+     * @param   array $attributes
+     * @return  Module
      */
     public function create(array $attributes): Module
     {
@@ -25,9 +25,9 @@ class ModuleRepository
     /**
      * Update an existing module with new attributes.
      * 
-     * @param Module $module The module to update
-     * @param array $attributes New attributes to apply
-     * @return Module The updated module with fresh data
+     * @param   Module $module
+     * @param   array $attributes
+     * @return  Module
      */
     public function update(Module $module, array $attributes): Module
     {
@@ -38,8 +38,8 @@ class ModuleRepository
     /**
      * Get paginated modules based on filter criteria.
      * 
-     * @param ModuleFilterData $filters Filter and pagination parameters
-     * @return LengthAwarePaginator Paginated module results
+     * @param   ModuleFilterData $filters
+     * @return  LengthAwarePaginator
      */
     public function getPaginatedModules(ModuleFilterData $filters): LengthAwarePaginator
     {
@@ -54,8 +54,8 @@ class ModuleRepository
     /**
      * Get module counts grouped by status for a company.
      * 
-     * @param string $companyId The company ID to get counts for
-     * @return array Associative array with status counts (all, draft, published, deleted)
+     * @param   string $companyId
+     * @return  array
      */
     public function getStatusCounts(string $companyId): array
     {

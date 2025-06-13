@@ -114,7 +114,7 @@
         }
     },
     "video-generate": {
-        "title": "Generate Modules",
+        "title": "Generate Modules with Youtube",
         "description": {
             "line1": "Connect your YouTube account to automatically generate modules from the videos on your channel.",
             "line2": "We'll fetch your latest videos daily, create corresponding modules and use the video descriptions as content.",

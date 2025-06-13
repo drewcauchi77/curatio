@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use App\Actions\Module\CreateModule;
 use App\Actions\Module\UpdateModule;
 use App\DTO\Module\ModuleData;
-use App\DTO\Module\ModuleFilterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
 use App\Http\Requests\Module\StoreModuleRequest;
 use App\Http\Requests\Module\UpdateModuleRequest;
 use App\Models\Module;
 use App\Services\Module\ModuleQueryService;
-use App\Traits\Module\HandlesModulePageRedirect;
+use App\Traits\Module\HandlesModuleListing;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response as InertiaResponse;
@@ -22,12 +21,12 @@ use Inertia\Response as InertiaResponse;
  */
 class ModuleController extends Controller
 {
-    use HandlesModulePageRedirect;
+    use HandlesModuleListing;
 
     /**
      * Initialize controller with query service and resource authorization.
      * 
-     * @param ModuleQueryService $queryService Service for module data retrieval
+     * @param   ModuleQueryService $queryService
      */
     function __construct(
         private readonly ModuleQueryService $queryService,
@@ -38,25 +37,18 @@ class ModuleController extends Controller
     /**
      * Display paginated modules with filtering and search.
      *
-     * @param IndexModuleRequest $request Validated filter parameters
-     * @return RedirectResponse|InertiaResponse Rendered module list or redirect
+     * @param   IndexModuleRequest $request
+     * @return  RedirectResponse|InertiaResponse
      */
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
-        $filterData = ModuleFilterData::fromRequest($request);
-        $result = $this->queryService->getFilteredModules($filterData);
-
-        if ($result['modules']->currentPage() > $result['modules']->lastPage() && $result['modules']->lastPage() > 0) {
-            return $this->redirectToFirstPage($request, 'modules.index');
-        }
-
-        return Inertia::render('modules/ListModulesPage', $result);
+        return $this->renderModulesList($request);
     }
 
     /**
      * Show module creation form.
      *
-     * @return InertiaResponse Rendered create form
+     * @return  InertiaResponse
      */
     public function create(): InertiaResponse
     {
@@ -66,9 +58,9 @@ class ModuleController extends Controller
     /**
      * Store a newly created module.
      *
-     * @param CreateModule $action Action to handle module creation
-     * @param StoreModuleRequest $request Validated module data
-     * @return RedirectResponse Redirect to created module with success message
+     * @param   CreateModule $action
+     * @param   StoreModuleRequest $request
+     * @return  RedirectResponse
      */
     public function store(CreateModule $action, StoreModuleRequest $request): RedirectResponse
     {
@@ -87,8 +79,8 @@ class ModuleController extends Controller
     /**
      * Display module details with status relationship.
      *
-     * @param Module $module The module to display
-     * @return InertiaResponse Rendered module detail view
+     * @param   Module $module
+     * @return  InertiaResponse
      */
     public function show(Module $module): InertiaResponse
     {
@@ -102,10 +94,10 @@ class ModuleController extends Controller
     /**
      * Update an existing module.
      *
-     * @param UpdateModule $action Action to handle module update
-     * @param UpdateModuleRequest $request Validated update data
-     * @param Module $module The module to update
-     * @return RedirectResponse Redirect to updated module with success message
+     * @param   UpdateModule $action
+     * @param   UpdateModuleRequest $request
+     * @param   Module $module
+     * @return  RedirectResponse
      */
     public function update(UpdateModule $action, UpdateModuleRequest $request, Module $module): RedirectResponse
     {

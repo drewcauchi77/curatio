@@ -7,18 +7,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
 use App\Services\Module\ModuleQueryService;
 use App\Services\YoutubeChannel\YoutubeAuthService;
-use App\Traits\Module\HandlesModulePageRedirect;
+use App\Traits\Module\HandlesModuleListing;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
+/**
+ * Manages youtube channel CRUD operations.
+ */
 class YoutubeChannelController extends Controller
 {
-    use HandlesModulePageRedirect;
+    use HandlesModuleListing;
 
     /**
      * Constructor to define the dependency injection.
+     * 
+     * @param   ModuleQueryService $queryService
+     * @param   YoutubeAuthService $authService
      */
     function __construct(
         private readonly ModuleQueryService $queryService,
@@ -26,10 +32,10 @@ class YoutubeChannelController extends Controller
     ) {}
 
     /**
-     * Query for the modules with search and ordering + sending props for modal opening.
+     * Query for the modules with search,ordering and can send props for modal opening.
      *
-     * @param   \App\Http\Requests\Module\IndexModuleRequest $request
-     * @return  \Illuminate\Http\RedirectResponse|\Inertia\Response
+     * @param   IndexModuleRequest $request
+     * @return  RedirectResponse|Response
      */
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
@@ -44,28 +50,22 @@ class YoutubeChannelController extends Controller
             }
         }
 
-        $filterData = ModuleFilterData::fromRequest($request);
-        $result = $this->queryService->getFilteredModulesWithModal($filterData, 'VideoGenerateModal');
         $youtubeConnection = $this->authService->getConnectionStatus($request->user());
 
-        if ($result['modules']->currentPage() > $result['modules']->lastPage() && $result['modules']->lastPage() > 0) {
-            return $this->redirectToFirstPage($request, 'modules.index');
-        }
-
-        return Inertia::render('modules/ListModulesPage', array_merge($result, [
+        return $this->renderModulesList($request, [
             'connection' => $youtubeConnection
-        ]));
+        ], 'VideoGenerateModal');
     }
 
-    public function connect(): RedirectResponse
-    {
-        $authUrl = $this->authService->getAuthUrl();
-        return redirect($authUrl);
-    }
-
+    /**
+     * Disconnect the Google API token based on the user details.
+     *
+     * @param   Request $request
+     * @return  RedirectResponse
+     */
     public function destroy(Request $request): RedirectResponse
     {
         $this->authService->disconnect($request->user());
-        return redirect()->route('modules.index');
+        return redirect()->route('modules.youtube.index');
     }
 }
