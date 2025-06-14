@@ -109,11 +109,13 @@ export interface ModalLayoutProps {
 
 export interface ChannelInfo {
     id: string;
-    name?: string;
-    profilePicture?: string;
-    subscriberCount?: string;
-    videoCount?: string;
-    viewCount?: string;
+    info?: {
+        name: string;
+        profilePicture: string;
+        subscriberCount: string;
+        videoCount: string;
+        viewCount: string;
+    };
 }
 
 /**
@@ -169,7 +171,6 @@ export interface ModulesIndexProps {
     modal?: ModuleAvailableModals;
     connection?: YoutubeConnectionProps;
     flash: FlashResponse;
-    channelData?: ChannelInfo;
 }
 
 export interface ModulesShowProps {
@@ -200,6 +201,7 @@ export interface YoutubeConnectionProps {
 export interface VideoGenerateProps {
     title: string;
     connection: YoutubeConnectionProps;
+    channelData?: ChannelInfo;
 }
 
 /**

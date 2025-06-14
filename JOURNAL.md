@@ -49,3 +49,7 @@ Started the day trying to set up test coverage for Pest, but ran into issues due
 ### 13/06/2025
 
 Skipped two days of work due to not feeling well, but got back into it today by reviewing what I last worked on, cleaning up some code, and adding missing annotations. I created a reusable trait for module listing and set up all the Google API configuration values via the `.env` file and Laravel's `config/app.php`. I also tested the YouTube token integration and everything looks solid so far. Next steps include extracting the channel data, displaying it on the page, generating modules from it and setting up the cronjob. I'm also considering switching from SQLite to MySQL for a more production-like environment.
+
+### 14/06/2025
+
+It's been a bit slow lately, but I made some progress by setting up a call to the Google API when the modal opens, fetching the channel name, profile picture and channel stats. Also updated some frontend logic and definitions to support the new flow. Everything's should come together gradually.

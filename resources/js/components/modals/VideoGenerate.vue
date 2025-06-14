@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Share2, ChevronLeft } from 'lucide-vue-next';
 import { VideoGenerateProps } from '@/definitions/interfaces';
 import ModalLayout from '../layouts/ModalLayout.vue';
-// import ChannelInfo from '../channel/ChannelInfo.vue';
+import ChannelInfo from '../channel/ChannelInfo.vue';
 
 defineProps<VideoGenerateProps>();
 
@@ -30,10 +30,8 @@ const handleDisconnect = (): void => {
                 <p class="mb-6">{{ $t('video-generate.description.line2') }}</p>
                 <p>{{ $t('video-generate.description.line3') }}</p>
             </div>
-            <h2 v-if="connection.channelData && connection.channelData.id">
-                {{ connection.channelData.id }}
-            </h2>
-            <!-- <ChannelInfo v-if="channelData && connection.connected" :channel-info="channelData"></ChannelInfo> -->
+
+            <ChannelInfo v-if="channelData && connection.connected" :channel-info="channelData"></ChannelInfo>
         </template>
         <template #footer>
             <div class="flex justify-end gap-3">

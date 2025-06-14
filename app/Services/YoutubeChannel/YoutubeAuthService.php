@@ -105,13 +105,52 @@ class YoutubeAuthService
         $channel = $this->channelRepository->findByUser($user);
         $connected = $channel && $channel->is_active;
 
-        return [
-            'connected' => $connected,
-            'authUrl' => $connected ? null : $this->getAuthUrl(),
-            'channelData' => [
-                'id' => $connected ? $channel->channel_id : null
-            ]
-        ];
+        if (!$connected) {
+            return [
+                'connected' => false,
+                'authUrl' => $this->getAuthUrl(),
+            ];
+        }
+
+        try {
+            // Set the stored access token
+            $this->googleClient->setAccessToken($channel->access_token);
+
+            $youtube = new YouTube($this->googleClient);
+            $channelResponse = $youtube->channels->listChannels('snippet,statistics', [
+                'mine' => true
+            ]);
+
+            if (empty($channelResponse->getItems())) {
+                throw new Exception('No YouTube channel found');
+            }
+
+            $youtubeChannelData = $channelResponse->getItems()[0];
+            $snippet = $youtubeChannelData->getSnippet();
+            $statistics = $youtubeChannelData->getStatistics();
+
+            return [
+                'connected' => true,
+                'authUrl' => null,
+                'channelData' => [
+                    'id' => $channel->channel_id,
+                    'info' => [
+                        'name' => $snippet->getTitle(),
+                        'profilePicture' => $snippet->getThumbnails()->getHigh()->getUrl(),
+                        'videoCount' => $statistics->getVideoCount(),
+                        'subscriberCount' => $statistics->getSubscriberCount(),
+                        'viewCount' => $statistics->getViewCount(),
+                    ]
+                ]
+            ];
+        } catch (Exception $e) {
+            // If we can't get channel info, treat as disconnected
+            return [
+                'connected' => false,
+                'authUrl' => $this->getAuthUrl(),
+                'error' => $e->getMessage()
+            ];
+        }
     }
 
     public function disconnect(User $user): bool
