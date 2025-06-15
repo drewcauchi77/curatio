@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignUuid('user_id')->nullable()->index();
             $table->string('channel_id')->unique();
-            $table->text('access_token');
-            $table->text('refresh_token')->nullable();
-            $table->timestamp('token_expires_at')->nullable();
+            $table->text('initial_access_token');
             $table->dateTime('last_synced_at')->default(now());
             $table->boolean('is_active')->default(true);
             $table->timestamps();

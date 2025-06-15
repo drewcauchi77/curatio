@@ -1,5 +1,5 @@
 <?php
-
+// PHPSTAN CONFIRMED
 namespace App\DTO\Module;
 
 use App\Http\Requests\Module\StoreModuleRequest;
@@ -13,10 +13,10 @@ final class ModuleData
     /**
      * Initialize module data.
      * 
-     * @param string $title Module title
-     * @param string|null $description Module description
-     * @param int $statusId Status ID reference
-     * @param string|null $companyId Company ID (optional)
+     * @param string $title
+     * @param string|null $description
+     * @param int $statusId
+     * @param string|null $companyId
      */
     function __construct(
         public readonly string $title,
@@ -28,8 +28,8 @@ final class ModuleData
     /**
      * Create from store request with user's company ID.
      * 
-     * @param StoreModuleRequest $request Validated store request
-     * @return self New instance with request data and company ID
+     * @param StoreModuleRequest $request
+     * @return self
      */
     public static function fromStoreRequest(StoreModuleRequest $request): self
     {
@@ -44,8 +44,8 @@ final class ModuleData
     /**
      * Create from update request without company ID.
      * 
-     * @param UpdateModuleRequest $request Validated update request
-     * @return self New instance with request data only
+     * @param UpdateModuleRequest $request
+     * @return self
      */
     public static function fromUpdateRequest(UpdateModuleRequest $request): self
     {
@@ -59,7 +59,7 @@ final class ModuleData
     /**
      * Convert to array with all properties.
      * 
-     * @return array Array with title, description, status_id, and company_id
+     * @return array<string, string|int|null>
      */
     public function toArray(): array
     {
@@ -74,7 +74,7 @@ final class ModuleData
     /**
      * Convert to array excluding company_id.
      * 
-     * @return array Array with title, description, and status_id only
+     * @return array<string, string|int|null>
      */
     public function toArrayWithoutCompany(): array
     {

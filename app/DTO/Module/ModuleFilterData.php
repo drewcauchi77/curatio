@@ -12,12 +12,12 @@ final class ModuleFilterData
     /**
      * Initialize filter data with search and pagination parameters.
      * 
-     * @param string $companyId Company ID to filter by
-     * @param string|null $search Search query for title filtering
-     * @param string $orderBy Field to order by (default: created_at)
-     * @param string $order Sort direction (default: asc)
-     * @param string $status Status filter (default: all)
-     * @param int $perPage Items per page (default: 12)
+     * @param string $companyId
+     * @param string|null $search
+     * @param string $orderBy
+     * @param string $order
+     * @param string $status
+     * @param int $perPage
      */
     function __construct(
         public readonly string $companyId,
@@ -31,8 +31,8 @@ final class ModuleFilterData
     /**
      * Create filter data from validated request with user's company.
      * 
-     * @param Request $request The incoming HTTP request
-     * @return self New instance with request parameters
+     * @param Request $request
+     * @return self
      */
     public static function fromRequest(Request $request): self
     {

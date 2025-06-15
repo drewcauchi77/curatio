@@ -1,12 +1,28 @@
 <?php
-
+// PHPSTAN CONFIRMED
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Collection;
+use Carbon\Carbon;
 
+/**
+ * Course model.
+ * 
+ * @property string $id
+ * @property string $title
+ * @property string $company_id
+ * @property int|null $status_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * 
+ * @property-read Company $company
+ * @property-read Status|null $status
+ * @property-read Collection<int, Module> $modules
+ */
 class Course extends Model
 {
     use HasUuids;
@@ -22,9 +38,9 @@ class Course extends Model
     ];
 
     /**
-     * @brief   Get modules associated with the course.
+     * Get modules associated with the course.
      *
-     * @return  \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Module, $this>
+     * @return BelongsToMany<\App\Models\Module, $this>
      */
     public function modules(): BelongsToMany
     {
@@ -32,9 +48,19 @@ class Course extends Model
     }
 
     /**
-     * @brief   Get the status associated with the course.
+     * Get the company that owns this course.
      *
-     * @return  \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Status, $this>
+     * @return BelongsTo<\App\Models\Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Get the status associated with the course.
+     *
+     * @return BelongsTo<\App\Models\Status, $this>
      */
     public function status(): BelongsTo
     {

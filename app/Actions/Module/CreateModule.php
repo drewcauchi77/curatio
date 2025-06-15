@@ -11,13 +11,18 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Creates a new module within a database transaction.
+ * 
+ * This action handles the creation of a new module with proper error handling,
+ * logging, and relationship loading within a database transaction to ensure
+ * data consistency.
  */
 final class CreateModule
 {
     /**
      * Initialize action with repository dependency.
      * 
-     * @param ModuleRepository $moduleRepository Repository for module persistence
+     * @param ModuleRepository $moduleRepository
+     * @return void
      */
     function __construct(
         private readonly ModuleRepository $moduleRepository,
@@ -26,14 +31,19 @@ final class CreateModule
     /**
      * Create a module and load its status relationship.
      *
-     * @param ModuleData $data Module data to create
-     * @return Module The newly created module with status loaded
-     * @throws Exception If creation operation fails
+     * This method creates a new module within a database transaction,
+     * logs the creation event, loads the status relationship, and handles
+     * any exceptions that may occur during the process.
+     *
+     * @param ModuleData $data
+     * @return Module
+     * @throws Exception
      */
     public function handle(ModuleData $data): Module
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data): Module {
             try {
+                /** @var Module $module */
                 $module = $this->moduleRepository->create($data->toArray());
 
                 Log::info('Module created', [

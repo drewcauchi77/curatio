@@ -2,7 +2,7 @@
 
 namespace App\Models\Scopes;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Query scopes for Module model.
@@ -12,9 +12,9 @@ trait ModuleScopes
     /**
      * Query for modules on company ID.
      * 
-     * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
-     * @param   string $companyId
-     * @return  Illuminate\Contracts\Database\Eloquent\Builder
+     * @param Builder<\App\Models\Module> $query
+     * @param string $companyId
+     * @return Builder<\App\Models\Module>
      */
     public function scopeForCompany(Builder $query, string $companyId): Builder
     {
@@ -24,9 +24,9 @@ trait ModuleScopes
     /**
      * Query for modules on the status.
      * 
-     * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
-     * @param   string $status
-     * @return  Illuminate\Contracts\Database\Eloquent\Builder
+     * @param Builder<\App\Models\Module> $query
+     * @param string $status
+     * @return Builder<\App\Models\Module>
      */
     public function scopeWithStatus(Builder $query, string $status): Builder
     {
@@ -37,9 +37,9 @@ trait ModuleScopes
     /**
      * Query for modules for the search functionality through title.
      * 
-     * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
-     * @param   string? $search
-     * @return  Illuminate\Contracts\Database\Eloquent\Builder
+     * @param Builder<\App\Models\Module> $query
+     * @param string|null $search
+     * @return Builder<\App\Models\Module>
      */
     public function scopeSearch(Builder $query, ?string $search): Builder
     {
@@ -49,10 +49,10 @@ trait ModuleScopes
     /**
      * Query for modules ordered by field.
      * 
-     * @param   Illuminate\Contracts\Database\Eloquent\Builder $query
-     * @param   string $orderBy
-     * @param   string $order
-     * @return  Illuminate\Contracts\Database\Eloquent\Builder
+     * @param Builder<\App\Models\Module> $query
+     * @param string $orderBy
+     * @param string $order
+     * @return Builder<\App\Models\Module>
      */
     public function scopeOrderByField(Builder $query, string $orderBy, string $order): Builder
     {

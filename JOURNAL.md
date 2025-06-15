@@ -53,3 +53,7 @@ Skipped two days of work due to not feeling well, but got back into it today by 
 ### 14/06/2025
 
 It's been a bit slow lately, but I made some progress by setting up a call to the Google API when the modal opens, fetching the channel name, profile picture and channel stats. Also updated some frontend logic and definitions to support the new flow. Everything's should come together gradually.
+
+### 15/06/2025
+
+Still yet to find some motivation but working a little bit. I found a small bug related to the OAuth and changed some logic. The issue was that the token used for login and authentication with Google was also being used to fetch the channel data. While that makes sense, if the token is expired, it prevents access to the channel info, therefore defeating the purpose of connecting a YouTube account. In the new setup, I made the `YoutubeChannel` model slimmer by storing only the initial token, and now I use my developer API key to fetch the channel data instead. I'll also use this key to retrieve the channel's public videos. Additionally, I went through some PHPStan errors and managed to fix around 50% of them.

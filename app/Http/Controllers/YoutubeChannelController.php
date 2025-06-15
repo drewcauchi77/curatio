@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\Module\ModuleFilterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\IndexModuleRequest;
 use App\Services\Module\ModuleQueryService;
 use App\Services\YoutubeChannel\YoutubeAuthService;
+use App\Services\YoutubeChannel\YoutubeChannelService;
 use App\Traits\Module\HandlesModuleListing;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
 /**
- * Manages youtube channel CRUD operations.
+ * Manages YouTube channel CRUD operations.
  */
 class YoutubeChannelController extends Controller
 {
@@ -22,35 +21,34 @@ class YoutubeChannelController extends Controller
 
     /**
      * Constructor to define the dependency injection.
-     * 
-     * @param   ModuleQueryService $queryService
-     * @param   YoutubeAuthService $authService
      */
-    function __construct(
+    public function __construct(
         private readonly ModuleQueryService $queryService,
         private readonly YoutubeAuthService $authService,
+        private readonly YoutubeChannelService $channelService
     ) {}
 
     /**
-     * Query for the modules with search,ordering and can send props for modal opening.
+     * Display modules list and handle OAuth callback.
      *
-     * @param   IndexModuleRequest $request
-     * @return  RedirectResponse|Response
+     * @param IndexModuleRequest $request
+     * @return RedirectResponse|InertiaResponse
      */
     public function index(IndexModuleRequest $request): RedirectResponse | InertiaResponse
     {
         if ($request->has('code')) {
             try {
-                $this->authService->handleAuthCallback($request->input('code'), $request->user());
-                // Where we get to here? TODO
-                return redirect()->route('modules.index');
+                $this->channelService->handleAuthCallback($request->input('code'), $request->user());
+                $this->authService->clearCodeVerifier();
+
+                return redirect()->route('modules.index')->with('success', 'YouTube channel connected successfully!');
             } catch (\Exception $e) {
-                // Check errors here? TODO
-                return redirect()->route('modules.index')->withErrors(['youtube' => 'Authentication failed']);
+                $this->authService->clearCodeVerifier();
+                return redirect()->route('modules.index')->withErrors(['youtube' => 'Authentication failed: ' . $e->getMessage()]);
             }
         }
 
-        $youtubeConnection = $this->authService->getConnectionStatus($request->user());
+        $youtubeConnection = $this->channelService->getConnectionStatus($request->user());
 
         return $this->renderModulesList($request, [
             'connection' => $youtubeConnection
@@ -58,14 +56,23 @@ class YoutubeChannelController extends Controller
     }
 
     /**
-     * Disconnect the Google API token based on the user details.
+     * Disconnect the YouTube channel.
      *
-     * @param   Request $request
-     * @return  RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $this->authService->disconnect($request->user());
-        return redirect()->route('modules.youtube.index');
+        try {
+            $success = $this->channelService->disconnect($request->user());
+
+            if ($success) {
+                return redirect()->route('modules.youtube.index')->with('success', 'YouTube channel disconnected successfully!');
+            }
+
+            return redirect()->route('modules.youtube.index')->withErrors(['youtube' => 'Failed to disconnect channel']);
+        } catch (\Exception $e) {
+            return redirect()->route('modules.youtube.index')->withErrors(['youtube' => 'An error occurred while disconnecting']);
+        }
     }
 }

@@ -1,9 +1,10 @@
 <?php
-
+// PHPSTAN CONFIRMED
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Carbon\Carbon;
 
 /**
  * YoutubeChannel model.
@@ -18,20 +19,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $is_active
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * 
+ * @property-read User $user
  */
 class YoutubeChannel extends Model
 {
     /**
      * The attributes that are mass assignable.
      *
-     * @var     array<string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
         'channel_id',
-        'access_token',
-        'refresh_token',
-        'token_expires_at',
+        'initial_access_token',
         'last_synced_at',
         'is_active'
     ];
@@ -39,30 +40,20 @@ class YoutubeChannel extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var     array<string, string>
+     * @var array<string, string>
      */
     protected $casts = [
-        'token_expires_at' => 'datetime',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'last_synced_at' => 'datetime'
     ];
 
     /**
      * Get the user that owns this YouTube channel.
      *
-     * @return  BelongsTo<User, YoutubeChannel>
+     * @return BelongsTo<\App\Models\User, $this>
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Check if the access token has expired.
-     *
-     * @return  bool
-     */
-    public function isTokenExpired(): bool
-    {
-        return $this->token_expires_at && $this->token_expires_at->isPast();
     }
 }

@@ -1,14 +1,31 @@
 <?php
-
+// PHPSTAN CONFIRMED
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Collection;
+use Carbon\Carbon;
 
+/**
+ * Company model.
+ * 
+ * @property string $id
+ * @property string $name
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * 
+ * @property-read Collection<int, User> $users
+ * @property-read Collection<int, Module> $modules
+ * @property-read Collection<int, Course> $courses
+ */
 class Company extends Model
 {
+    /** 
+     * @use HasFactory<\Database\Factories\CompanyFactory> 
+     */
     use HasFactory, HasUuids;
 
     /**
@@ -21,9 +38,9 @@ class Company extends Model
     ];
 
     /**
-     * @brief   Get the user records associated with the company.
+     * Get the user records associated with the company.
      *
-     * @return  \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\User, $this>
+     * @return HasMany<\App\Models\User, $this>
      */
     public function users(): HasMany
     {
@@ -31,12 +48,22 @@ class Company extends Model
     }
 
     /**
-     * @brief   Get the module records associated with the company.
+     * Get the module records associated with the company.
      *
-     * @return  \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Module, $this>
+     * @return HasMany<\App\Models\Module, $this>
      */
     public function modules(): HasMany
     {
         return $this->hasMany(Module::class);
+    }
+
+    /**
+     * Get the course records associated with the company.
+     *
+     * @return HasMany<\App\Models\Course, $this>
+     */
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class);
     }
 }

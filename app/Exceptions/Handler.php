@@ -1,21 +1,29 @@
 <?php
-
+// PHPSTAN CONFIRMED
 namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Throwable;
 
+/**
+ * Custom exception handler for application errors.
+ */
 class Handler extends Exception
 {
     /**
      * Render the exception as an HTTP response.
+     *
+     * @param Request $request
+     * @param Throwable $exception
+     * @return RedirectResponse|void
      */
     // TODO 
     public function render($request, Throwable $exception)
     {
-        // Handle authorization errors
         if ($exception instanceof AuthorizationException) {
             return back()->withInput()->with([
                 'type' => 'error',
@@ -24,7 +32,6 @@ class Handler extends Exception
             ]);
         }
 
-        // Handle database errors gracefully
         if ($exception instanceof QueryException) {
             return back()->withInput()->with([
                 'type' => 'error',
